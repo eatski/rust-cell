@@ -12,12 +12,14 @@ fn main() -> Result<(), JsValue> {
 
     // canvasを初期化
     let canvas: HtmlCanvasElement = canvas.dyn_into()?;
+    canvas.set_width(512);
+    canvas.set_height(512);
     let context = canvas.get_context("2d")?.ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
     let context: CanvasRenderingContext2d = context.dyn_into()?;
 
     // canvasを塗りつぶす
-    context.begin_path();
     context.rect(0.0, 0.0, 100.0, 100.0);
+    context.rect(100.0, 100.0, 100.0, 100.0);
     context.fill();
 
     Ok(())
