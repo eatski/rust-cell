@@ -29,7 +29,7 @@ fn main() -> Result<(), JsValue> {
     // pointsをcalc_next_pointsしながら繰り返し描画する
     set_interval_with_request_animation_frame(move || {
         draw_points(&context, &points);
-        points = calc_next_points(&points);
+        points = update(&points);
     });
 
     Ok(())
@@ -47,21 +47,24 @@ struct Point {
  * context.rectを使用し、16pxの正方形をpointの数だけ描画する
  */
 fn draw_points(context: &CanvasRenderingContext2d, points: &[Point]) {
+    let size = 8.0;
     context.clear_rect(0.0, 0.0, 512.0, 512.0);
     context.begin_path();
     for point in points {
-        context.rect(point.x as f64 * 16.0, point.y as f64 * 16.0, 16.0, 16.0);
+        context.rect(point.x as f64 * size, point.y as f64 * size, size, size);
     }
     context.fill();
 }
 
-const FRAME_SIZE : f64 = 1000.0 / 15.0;
+const FRAME_SIZE : f64 = 1000.0 / 30.0;
 
 /**
  * 任意のFnMutをrequest_animation_frame関数を使って繰り返し呼び出す。
  * 再帰は使わず、Rcで参照を保持する。
  */
-fn set_interval_with_request_animation_frame(mut f: impl FnMut() + 'static) {
+fn set_interval_with_request_animation_frame(
+    mut frame: impl FnMut() + 'static,
+) {
     fn get_window() -> web_sys::Window {
         web_sys::window().expect("should have a window in this context")
     }
@@ -79,8 +82,8 @@ fn set_interval_with_request_animation_frame(mut f: impl FnMut() + 'static) {
     let closure = Closure::wrap(Box::new(move |now| {
         let dt = now - last;
         acc += dt;
-        if acc >= FRAME_SIZE {
-            f();
+        while acc >= FRAME_SIZE {
+            frame();
             acc -= FRAME_SIZE;
         }
         last = now;
@@ -94,7 +97,7 @@ fn set_interval_with_request_animation_frame(mut f: impl FnMut() + 'static) {
  * 次の点を計算する
  * 点はランダムに上下左右に1単位動く
  */
-fn calc_next_points(points: &[Point]) -> Vec<Point> {
+fn update(points: &[Point]) -> Vec<Point> {
     let mut next_points = Vec::new();
     for point in points {
         let mut rng = rand::thread_rng();
