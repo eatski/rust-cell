@@ -44,7 +44,7 @@ pub fn update(state: &mut GameState,inputs: &Vec<Input>){
     for input in inputs {
         match input {
             Input::Click { address } => {
-                state.cells.insert(*address,Unit{id:0});
+                state.cells.insert(*address,Unit{id: state.cells.len()});
             }
         }
     }
