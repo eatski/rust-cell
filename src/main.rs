@@ -1,3 +1,5 @@
+use web_sys::console;
+
 fn main() {
-    println!("Hello, world!");
+    console::log_1(&"Hello world!".into());
 }
