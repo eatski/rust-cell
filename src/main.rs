@@ -55,23 +55,37 @@ fn draw_points(context: &CanvasRenderingContext2d, points: &[Point]) {
     context.fill();
 }
 
+const FRAME_SIZE : f64 = 1000.0 / 15.0;
+
 /**
  * 任意のFnMutをrequest_animation_frame関数を使って繰り返し呼び出す。
  * 再帰は使わず、Rcで参照を保持する。
  */
 fn set_interval_with_request_animation_frame(mut f: impl FnMut() + 'static) {
-    type LoopClosure = Closure<dyn FnMut()>;
+    fn get_window() -> web_sys::Window {
+        web_sys::window().expect("should have a window in this context")
+    }
+
+    let mut last = get_window().performance().unwrap().now();
+    let mut acc = 0.0;
+
+    type LoopClosure = Closure<dyn FnMut(f64)>;
     fn request_animation_frame(closure: &LoopClosure) {
-        let window = window().expect("should have a window in this context");
-        window.request_animation_frame(closure.as_ref().unchecked_ref()).expect("should register `requestAnimationFrame` OK");
+        get_window().request_animation_frame(closure.as_ref().unchecked_ref()).expect("should register `requestAnimationFrame` OK");
     }
     let rc: Rc<RefCell<Option<LoopClosure>>> = Rc::new(RefCell::new(None));
     let g = rc.clone();
     
-    let closure = Closure::wrap(Box::new(move || {
-        f();
+    let closure = Closure::wrap(Box::new(move |now| {
+        let dt = now - last;
+        acc += dt;
+        if acc >= FRAME_SIZE {
+            f();
+            acc -= FRAME_SIZE;
+        }
+        last = now;
         request_animation_frame(rc.borrow().as_ref().unwrap());
-    }) as Box<dyn FnMut()>);
+    }) as Box<dyn FnMut(f64)>);
     *g.borrow_mut() = Some(closure);
     request_animation_frame(g.borrow().as_ref().unwrap());
 }

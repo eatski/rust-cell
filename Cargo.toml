@@ -13,7 +13,8 @@ web-sys = { version = "0.3",features = [
     "Document",
     "HtmlElement",
     "HtmlCanvasElement",
-    "CanvasRenderingContext2d"
+    "CanvasRenderingContext2d",
+    "Performance",
 ]}
 js-sys = "0.3"
 rand = { version = "0.8" }
