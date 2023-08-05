@@ -4,6 +4,10 @@ use rand::Rng;
 use wasm_bindgen::{JsCast, JsValue, prelude::Closure};
 use web_sys::{console, window, HtmlCanvasElement, CanvasRenderingContext2d};
 
+fn get_window() -> web_sys::Window {
+    web_sys::window().expect("should have a window in this context")
+}
+
 fn main() -> Result<(), JsValue> {
     console::log_1(&"Hello world!".into());
     // body配下にcanvasを追加
@@ -26,11 +30,13 @@ fn main() -> Result<(), JsValue> {
         Point { x: 31, y: 31 },
     ];
 
+    let events = init_input_receiver(&canvas);
+
     // pointsをcalc_next_pointsしながら繰り返し描画する
-    set_interval_with_request_animation_frame(move || {
+    set_interval_with_request_animation_frame(move |events| {
         draw_points(&context, &points);
-        points = update(&points);
-    });
+        points = update(&points,events);
+    },events);
 
     Ok(())
 }
@@ -41,17 +47,18 @@ struct Point {
     y: isize,
 }
 
+const CELL_SIZE: f64 = 16.0;
+
 /**
  * 今までの点を消去
  * 16pxを1単位として、点を描画する
  * context.rectを使用し、16pxの正方形をpointの数だけ描画する
  */
 fn draw_points(context: &CanvasRenderingContext2d, points: &[Point]) {
-    let size = 8.0;
     context.clear_rect(0.0, 0.0, 512.0, 512.0);
     context.begin_path();
     for point in points {
-        context.rect(point.x as f64 * size, point.y as f64 * size, size, size);
+        context.rect(point.x as f64 * CELL_SIZE, point.y as f64 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     }
     context.fill();
 }
@@ -63,11 +70,10 @@ const FRAME_SIZE : f64 = 1000.0 / 30.0;
  * 再帰は使わず、Rcで参照を保持する。
  */
 fn set_interval_with_request_animation_frame(
-    mut frame: impl FnMut() + 'static,
+    mut frame: impl FnMut(Vec<Point>) + 'static,
+    events: Rc<RefCell<Vec<Point>>>,
 ) {
-    fn get_window() -> web_sys::Window {
-        web_sys::window().expect("should have a window in this context")
-    }
+ 
 
     let mut last = get_window().performance().unwrap().now();
     let mut acc = 0.0;
@@ -76,28 +82,29 @@ fn set_interval_with_request_animation_frame(
     fn request_animation_frame(closure: &LoopClosure) {
         get_window().request_animation_frame(closure.as_ref().unchecked_ref()).expect("should register `requestAnimationFrame` OK");
     }
-    let rc: Rc<RefCell<Option<LoopClosure>>> = Rc::new(RefCell::new(None));
-    let g = rc.clone();
-    
+    let frame_rc: Rc<RefCell<Option<LoopClosure>>> = Rc::new(RefCell::new(None));
+    let frame_rc_clone: Rc<RefCell<Option<Closure<dyn FnMut(f64)>>>> = frame_rc.clone();
     let closure = Closure::wrap(Box::new(move |now| {
         let dt = now - last;
         acc += dt;
+        
         while acc >= FRAME_SIZE {
-            frame();
+            let taked = events.borrow_mut().drain(..).collect::<Vec<_>>();
+            frame(taked);
             acc -= FRAME_SIZE;
         }
         last = now;
-        request_animation_frame(rc.borrow().as_ref().unwrap());
+        request_animation_frame(frame_rc.borrow().as_ref().unwrap());
     }) as Box<dyn FnMut(f64)>);
-    *g.borrow_mut() = Some(closure);
-    request_animation_frame(g.borrow().as_ref().unwrap());
+    *frame_rc_clone.borrow_mut() = Some(closure);
+    request_animation_frame(frame_rc_clone.borrow().as_ref().unwrap());
 }
 
 /**
  * 次の点を計算する
  * 点はランダムに上下左右に1単位動く
  */
-fn update(points: &[Point]) -> Vec<Point> {
+fn update(points: &[Point],events: Vec<Point>) -> Vec<Point> {
     let mut next_points = Vec::new();
     for point in points {
         let mut rng = rand::thread_rng();
@@ -111,5 +118,27 @@ fn update(points: &[Point]) -> Vec<Point> {
         };
         next_points.push(next_point);
     }
+    next_points.extend(events);
     next_points
+}
+
+/**
+ * Canvasへのクリックイベントを受け取る
+ * イベントに応じて更新されるPointの配列を返す
+ */
+fn init_input_receiver(canvas: &HtmlCanvasElement) -> Rc<RefCell<Vec<Point>>> {
+    let points = Rc::new(RefCell::new(Vec::new()));
+    let points_clone = points.clone();
+    let closure = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
+        let x = event.offset_x();
+        let y = event.offset_y();
+        let point = Point {
+            x: (x as f64 / CELL_SIZE) as isize,
+            y: (y as f64 / CELL_SIZE) as isize,
+        };
+        points_clone.borrow_mut().push(point);
+    }) as Box<dyn FnMut(_)>);
+    canvas.add_event_listener_with_callback("click", closure.as_ref().unchecked_ref()).unwrap();
+    closure.forget();
+    points
 }
