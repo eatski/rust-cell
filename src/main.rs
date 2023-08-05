@@ -1,6 +1,7 @@
 use std::{rc::Rc, cell::RefCell};
 
-use rand::Rng;
+use browser::CanvasView;
+use game::{GameState, update};
 use wasm_bindgen::{JsCast, JsValue, prelude::Closure};
 use web_sys::{console, window, HtmlCanvasElement, CanvasRenderingContext2d};
 
@@ -9,7 +10,6 @@ fn get_window() -> web_sys::Window {
 }
 
 const MAP_PX: u32 = 1024;
-
 fn main() -> Result<(), JsValue> {
     console::log_1(&"Hello world!".into());
     // body配下にcanvasを追加
@@ -26,43 +26,19 @@ fn main() -> Result<(), JsValue> {
     let context = canvas.get_context("2d")?.ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
     let context: CanvasRenderingContext2d = context.dyn_into()?;
 
-    let mut points = vec![
-        Point { x: 0, y: 0 },
-        Point { x: 16, y: 16 },
-        Point { x: 31, y: 31 },
-    ];
+    let mut state = GameState::default();
 
-    let events = init_input_receiver(&canvas);
+    let drawer = CanvasView::new(context);
+
+    let events = drawer.init_input_receiver();
 
     // pointsをcalc_next_pointsしながら繰り返し描画する
     set_interval_with_request_animation_frame(move |events| {
-        draw_points(&context, &points);
-        points = update(&points,events);
+        drawer.draw(&state);
+        update(&mut state,&events);
     },events);
 
     Ok(())
-}
-
-#[derive(Debug)]
-struct Point {
-    x: isize,
-    y: isize,
-}
-
-const CELL_SIZE: f64 = 8.0;
-
-/**
- * 今までの点を消去
- * 16pxを1単位として、点を描画する
- * context.rectを使用し、16pxの正方形をpointの数だけ描画する
- */
-fn draw_points(context: &CanvasRenderingContext2d, points: &[Point]) {
-    context.clear_rect(0.0, 0.0, MAP_PX.into(), MAP_PX.into());
-    context.begin_path();
-    for point in points {
-        context.rect(point.x as f64 * CELL_SIZE, point.y as f64 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-    }
-    context.fill();
 }
 
 const FRAME_SIZE : f64 = 1000.0 / 30.0;
@@ -101,45 +77,3 @@ fn set_interval_with_request_animation_frame<Input: 'static>(
     request_animation_frame(frame_rc_clone.borrow().as_ref().unwrap());
 }
 
-/**
- * 次の点を計算する
- * 点はランダムに上下左右に1単位動く
- */
-fn update(points: &[Point],events: Vec<Point>) -> Vec<Point> {
-    let mut next_points = Vec::new();
-    for point in points {
-        let mut rng = rand::thread_rng();
-        let direction = rng.gen_range(0..4);
-        let next_point = match direction {
-            0 => Point { x: point.x, y: point.y - 1 },
-            1 => Point { x: point.x, y: point.y + 1 },
-            2 => Point { x: point.x - 1, y: point.y },
-            3 => Point { x: point.x + 1, y: point.y },
-            _ => panic!("direction is invalid"),
-        };
-        next_points.push(next_point);
-    }
-    next_points.extend(events);
-    next_points
-}
-
-/**
- * Canvasへのクリックイベントを受け取る
- * イベントに応じて更新されるPointの配列を返す
- */
-fn init_input_receiver(canvas: &HtmlCanvasElement) -> Rc<RefCell<Vec<Point>>> {
-    let points = Rc::new(RefCell::new(Vec::new()));
-    let points_clone = points.clone();
-    let closure = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-        let x = event.offset_x();
-        let y = event.offset_y();
-        let point = Point {
-            x: (x as f64 / CELL_SIZE) as isize,
-            y: (y as f64 / CELL_SIZE) as isize,
-        };
-        points_clone.borrow_mut().push(point);
-    }) as Box<dyn FnMut(_)>);
-    canvas.add_event_listener_with_callback("click", closure.as_ref().unchecked_ref()).unwrap();
-    closure.forget();
-    points
-}
