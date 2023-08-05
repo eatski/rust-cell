@@ -1,4 +1,7 @@
-use wasm_bindgen::{JsCast, JsValue};
+use std::{rc::Rc, cell::RefCell};
+
+use rand::Rng;
+use wasm_bindgen::{JsCast, JsValue, prelude::Closure};
 use web_sys::{console, window, HtmlCanvasElement, CanvasRenderingContext2d};
 
 fn main() -> Result<(), JsValue> {
@@ -17,10 +20,79 @@ fn main() -> Result<(), JsValue> {
     let context = canvas.get_context("2d")?.ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
     let context: CanvasRenderingContext2d = context.dyn_into()?;
 
-    // canvasを塗りつぶす
-    context.rect(0.0, 0.0, 100.0, 100.0);
-    context.rect(100.0, 100.0, 100.0, 100.0);
-    context.fill();
+    let mut points = vec![
+        Point { x: 0, y: 0 },
+        Point { x: 16, y: 16 },
+        Point { x: 31, y: 31 },
+    ];
+
+    // pointsをcalc_next_pointsしながら繰り返し描画する
+    set_interval_with_request_animation_frame(move || {
+        draw_points(&context, &points);
+        points = calc_next_points(&points);
+    });
 
     Ok(())
+}
+
+#[derive(Debug)]
+struct Point {
+    x: isize,
+    y: isize,
+}
+
+/**
+ * 今までの点を消去
+ * 16pxを1単位として、点を描画する
+ * context.rectを使用し、16pxの正方形をpointの数だけ描画する
+ */
+fn draw_points(context: &CanvasRenderingContext2d, points: &[Point]) {
+    context.clear_rect(0.0, 0.0, 512.0, 512.0);
+    context.begin_path();
+    for point in points {
+        context.rect(point.x as f64 * 16.0, point.y as f64 * 16.0, 16.0, 16.0);
+    }
+    context.fill();
+}
+
+/**
+ * 任意のFnMutをrequest_animation_frame関数を使って繰り返し呼び出す。
+ * 再帰は使わず、Rcで参照を保持する。
+ */
+fn set_interval_with_request_animation_frame(mut f: impl FnMut() + 'static) {
+    type LoopClosure = Closure<dyn FnMut()>;
+    fn request_animation_frame(closure: &LoopClosure) {
+        let window = window().expect("should have a window in this context");
+        window.request_animation_frame(closure.as_ref().unchecked_ref()).expect("should register `requestAnimationFrame` OK");
+    }
+    let rc: Rc<RefCell<Option<LoopClosure>>> = Rc::new(RefCell::new(None));
+    let g = rc.clone();
+    
+    let closure = Closure::wrap(Box::new(move || {
+        f();
+        request_animation_frame(rc.borrow().as_ref().unwrap());
+    }) as Box<dyn FnMut()>);
+    *g.borrow_mut() = Some(closure);
+    request_animation_frame(g.borrow().as_ref().unwrap());
+}
+
+/**
+ * 次の点を計算する
+ * 点はランダムに上下左右に1単位動く
+ */
+fn calc_next_points(points: &[Point]) -> Vec<Point> {
+    let mut next_points = Vec::new();
+    for point in points {
+        let mut rng = rand::thread_rng();
+        let direction = rng.gen_range(0..4);
+        let next_point = match direction {
+            0 => Point { x: point.x, y: point.y - 1 },
+            1 => Point { x: point.x, y: point.y + 1 },
+            2 => Point { x: point.x - 1, y: point.y },
+            3 => Point { x: point.x + 1, y: point.y },
+            _ => panic!("direction is invalid"),
+        };
+        next_points.push(next_point);
+    }
+    next_points
 }
