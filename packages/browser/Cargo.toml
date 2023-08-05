@@ -8,12 +8,8 @@ edition = "2021"
 [dependencies]
 web-sys = { version = "0.3",features = [
     "console",
-    "Window",
-    "Document",
-    "HtmlElement",
     "HtmlCanvasElement",
     "CanvasRenderingContext2d",
-    "Performance",
     "MouseEvent"
 ]}
 js-sys = "0.3"
