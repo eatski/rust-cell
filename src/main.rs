@@ -8,6 +8,8 @@ fn get_window() -> web_sys::Window {
     web_sys::window().expect("should have a window in this context")
 }
 
+const MAP_PX: u32 = 1024;
+
 fn main() -> Result<(), JsValue> {
     console::log_1(&"Hello world!".into());
     // body配下にcanvasを追加
@@ -19,8 +21,8 @@ fn main() -> Result<(), JsValue> {
 
     // canvasを初期化
     let canvas: HtmlCanvasElement = canvas.dyn_into()?;
-    canvas.set_width(512);
-    canvas.set_height(512);
+    canvas.set_width(MAP_PX);
+    canvas.set_height(MAP_PX);
     let context = canvas.get_context("2d")?.ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
     let context: CanvasRenderingContext2d = context.dyn_into()?;
 
@@ -47,7 +49,7 @@ struct Point {
     y: isize,
 }
 
-const CELL_SIZE: f64 = 16.0;
+const CELL_SIZE: f64 = 8.0;
 
 /**
  * 今までの点を消去
@@ -55,7 +57,7 @@ const CELL_SIZE: f64 = 16.0;
  * context.rectを使用し、16pxの正方形をpointの数だけ描画する
  */
 fn draw_points(context: &CanvasRenderingContext2d, points: &[Point]) {
-    context.clear_rect(0.0, 0.0, 512.0, 512.0);
+    context.clear_rect(0.0, 0.0, MAP_PX.into(), MAP_PX.into());
     context.begin_path();
     for point in points {
         context.rect(point.x as f64 * CELL_SIZE, point.y as f64 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -69,11 +71,10 @@ const FRAME_SIZE : f64 = 1000.0 / 30.0;
  * 任意のFnMutをrequest_animation_frame関数を使って繰り返し呼び出す。
  * 再帰は使わず、Rcで参照を保持する。
  */
-fn set_interval_with_request_animation_frame(
-    mut frame: impl FnMut(Vec<Point>) + 'static,
-    events: Rc<RefCell<Vec<Point>>>,
+fn set_interval_with_request_animation_frame<Input: 'static>(
+    mut frame: impl FnMut(Vec<Input>) + 'static,
+    events: Rc<RefCell<Vec<Input>>>,
 ) {
- 
 
     let mut last = get_window().performance().unwrap().now();
     let mut acc = 0.0;
