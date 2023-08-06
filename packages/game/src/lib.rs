@@ -31,15 +31,20 @@ pub fn update(state: &mut GameState,inputs: &Vec<Input>){
     let mut rng = rand::thread_rng();
     let cells: HashMap<_,_> = state.cells.drain().collect();
     for (address,unit) in cells.into_iter() {
-        let direction = rng.gen_range(0..4);
-        let next_address = match direction {
-            0 => Address { x: address.x, y: address.y - 1 },
-            1 => Address { x: address.x, y: address.y + 1 },
-            2 => Address { x: address.x - 1, y: address.y },
-            3 => Address { x: address.x + 1, y: address.y },
-            _ => panic!("direction is invalid"),
-        };
-        state.cells.insert(next_address,unit);
+        if rng.gen_range(0..8) != 0 {
+            state.cells.insert(address,unit);
+        } else {
+            let direction = rng.gen_range(0..4);
+            let next_address = match direction {
+                0 => Address { x: address.x, y: address.y - 1 },
+                1 => Address { x: address.x, y: address.y + 1 },
+                2 => Address { x: address.x - 1, y: address.y },
+                3 => Address { x: address.x + 1, y: address.y },
+                _ => panic!("direction is invalid"),
+            };
+            state.cells.insert(next_address,unit);
+        }
+       
     }
     for input in inputs {
         match input {
