@@ -1,4 +1,4 @@
-use std::{rc::Rc, cell::RefCell};
+use std::{cell::RefCell, rc::Rc};
 
 use wasm_bindgen::{prelude::Closure, JsCast};
 use web_sys::CanvasRenderingContext2d;
@@ -6,7 +6,7 @@ use web_sys::CanvasRenderingContext2d;
 const CELL_SIZE: f64 = 8.0;
 const MAP_PX: u32 = 1024;
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub struct CanvasView {
     canvas_context: CanvasRenderingContext2d,
 }
@@ -34,18 +34,20 @@ impl CanvasView {
         let events = Rc::new(RefCell::new(Vec::new()));
         let events_for_closure = events.clone();
         let closure = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            let x = event.client_x() as f64 ;
-            let y = event.client_y() as f64 ;
+            let x = event.client_x() as f64;
+            let y = event.client_y() as f64;
             let address = game::Address {
                 x: (x / CELL_SIZE) as isize,
                 y: (y / CELL_SIZE) as isize,
             };
-            events_for_closure.borrow_mut().push(game::Input::Click { address });
+            events_for_closure
+                .borrow_mut()
+                .push(game::Input::Click { address });
         }) as Box<dyn FnMut(_)>);
         canvas
             .add_event_listener_with_callback("click", closure.as_ref().unchecked_ref())
             .unwrap();
         closure.forget();
         events
-    } 
+    }
 }
