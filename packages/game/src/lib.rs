@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use rand::{seq::SliceRandom, Rng};
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct Address {
     pub x: isize,
     pub y: isize,
@@ -67,7 +67,7 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>) {
         match input {
             Input::Click { address } => {
                 state.cells.insert(
-                    *address,
+                    address.clone(),
                     Unit {
                         id: state.cells.len(),
                     },
