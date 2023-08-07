@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use rand::Rng;
+use rand::{Rng, seq::SliceRandom};
 
 #[derive(Debug,PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Address {
@@ -12,7 +12,7 @@ pub enum Input {
     Click { address: Address },
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct Unit {
     pub id: usize,
 }
@@ -29,11 +29,10 @@ pub struct GameState {
  */
 pub fn update(state: &mut GameState,inputs: &Vec<Input>){
     let mut rng = rand::thread_rng();
-    let cells: HashMap<_,_> = state.cells.drain().collect();
-    for (address,unit) in cells.into_iter() {
-        if rng.gen_range(0..8) != 0 {
-            state.cells.insert(address,unit);
-        } else {
+    let mut units = state.cells.clone().into_iter().collect::<Vec<(Address,Unit)>>();
+    units.shuffle(&mut rng);
+    for (address,unit) in units.into_iter() {
+        if rng.gen_range(0..8) == 0 {
             let direction = rng.gen_range(0..4);
             let next_address = match direction {
                 0 => Address { x: address.x, y: address.y - 1 },
@@ -42,9 +41,11 @@ pub fn update(state: &mut GameState,inputs: &Vec<Input>){
                 3 => Address { x: address.x + 1, y: address.y },
                 _ => panic!("direction is invalid"),
             };
-            state.cells.insert(next_address,unit);
+            if !state.cells.contains_key(&next_address) {
+                state.cells.remove(&address);
+                state.cells.insert(next_address,unit);
+            }
         }
-       
     }
     for input in inputs {
         match input {
