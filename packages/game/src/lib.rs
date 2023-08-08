@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use rand::{seq::SliceRandom, Rng};
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone,Copy)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Address {
     pub x: isize,
     pub y: isize,
@@ -16,7 +16,7 @@ enum Direction {
 }
 
 impl Direction {
-    fn directions() -> Vec<Self>{
+    fn directions() -> Vec<Self> {
         vec![
             Direction::Up,
             Direction::Down,
@@ -27,7 +27,7 @@ impl Direction {
 }
 
 impl Address {
-    fn next(&self,direction: &Direction) -> Self {
+    fn next(&self, direction: &Direction) -> Self {
         match direction {
             Direction::Up => Address {
                 x: self.x,
@@ -66,13 +66,13 @@ pub struct GameState {
 
 #[derive(Debug)]
 struct HydratedGameState<'a> {
-    units: HashMap<UnitId,HydratedUnit>,
+    units: HashMap<UnitId, HydratedUnit>,
     state: &'a mut GameState,
 }
 
-impl <'a>HydratedGameState<'a> {
+impl<'a> HydratedGameState<'a> {
     fn new(state: &'a mut GameState) -> Self {
-        let mut units: HashMap<UnitId,HydratedUnit> = HashMap::new();
+        let mut units: HashMap<UnitId, HydratedUnit> = HashMap::new();
         for (address, unit_id) in state.cells.iter() {
             let unit = units.entry(*unit_id).or_insert(HydratedUnit {
                 unit: Unit,
@@ -80,14 +80,12 @@ impl <'a>HydratedGameState<'a> {
             });
             unit.addresses.push(*address);
         }
-        Self { 
-            units,
-            state, 
-        }
+        Self { units, state }
     }
-    fn move_unit(&mut self,unit_id: &UnitId, direction: &Direction) {
+    fn move_unit(&mut self, unit_id: &UnitId, direction: &Direction) {
         let unit = self.units.get_mut(unit_id).unwrap();
-        let next_addresses: Vec<Address> = unit.addresses
+        let next_addresses: Vec<Address> = unit
+            .addresses
             .iter()
             .map(|address| address.next(direction))
             .collect();
@@ -105,15 +103,17 @@ impl <'a>HydratedGameState<'a> {
             unit.addresses = next_addresses;
         }
     }
-    fn merge_near_units(&mut self,target_unit_id: &UnitId) {
+    fn merge_near_units(&mut self, target_unit_id: &UnitId) {
         let target_unit = self.units.get(target_unit_id).unwrap();
         let cells = &self.state.cells;
-        let near_unit_ids: HashSet<UnitId> = 
-            target_unit.addresses
+        let near_unit_ids: HashSet<UnitId> = target_unit
+            .addresses
             .iter()
             .flat_map(|address| {
                 let directions = Direction::directions();
-                directions.into_iter().map(move |direction| cells.get(&address.next(&direction)))
+                directions
+                    .into_iter()
+                    .map(move |direction| cells.get(&address.next(&direction)))
             })
             .filter(|unit_id| unit_id.map(|id| id != target_unit_id).unwrap_or(false))
             .filter_map(|unit_id| unit_id.copied())
@@ -129,35 +129,22 @@ impl <'a>HydratedGameState<'a> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn init_mock_state() -> GameState {
         GameState {
-            cells: [
-                (Address { x: 0, y: 0 }, 0),
-                (Address { x: 2, y: 0 }, 1),
-            ].into(),
-            units: [
-                (0,Unit),
-                (1,Unit)
-            ].into(),
+            cells: [(Address { x: 0, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
+            units: [(0, Unit), (1, Unit)].into(),
         }
     }
 
     #[test]
     fn new() {
         let mut state = GameState {
-            cells: [
-                (Address { x: 0, y: 0 }, 0),
-                (Address { x: 2, y: 0 }, 1),
-            ].into(),
-            units: [
-                (0,Unit),
-                (1,Unit)
-            ].into(),
+            cells: [(Address { x: 0, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
+            units: [(0, Unit), (1, Unit)].into(),
         };
         let hydrated = HydratedGameState::new(&mut state);
         insta::assert_debug_snapshot!(hydrated);
@@ -166,14 +153,8 @@ mod tests {
     #[test]
     fn move_unit() {
         let mut state = GameState {
-            cells: [
-                (Address { x: 0, y: 0 }, 0),
-                (Address { x: 2, y: 0 }, 1),
-            ].into(),
-            units: [
-                (0,Unit),
-                (1,Unit)
-            ].into(),
+            cells: [(Address { x: 0, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
+            units: [(0, Unit), (1, Unit)].into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Right);
@@ -183,13 +164,8 @@ mod tests {
     #[test]
     fn move_unit_2() {
         let mut state = GameState {
-            cells: [
-                (Address { x: 1, y: 0 }, 0),
-                (Address { x: 2, y: 0 }, 0),
-            ].into(),
-            units: [
-                (0,Unit),
-            ].into(),
+            cells: [(Address { x: 1, y: 0 }, 0), (Address { x: 2, y: 0 }, 0)].into(),
+            units: [(0, Unit)].into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Left);
@@ -199,14 +175,8 @@ mod tests {
     #[test]
     fn merge_near_units() {
         let mut state = GameState {
-            cells: [
-                (Address { x: 1, y: 0 }, 0),
-                (Address { x: 2, y: 0 }, 1),
-            ].into(),
-            units: [
-                (0,Unit),
-                (1,Unit)
-            ].into(),
+            cells: [(Address { x: 1, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
+            units: [(0, Unit), (1, Unit)].into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.merge_near_units(&0);
@@ -242,15 +212,9 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>) {
     for input in inputs {
         match input {
             Input::Click { address } => {
-                let id = state.units.iter().map(|(id,_)| id).max().unwrap_or(&0) + 1;
-                state.cells.insert(
-                    *address,
-                    id,
-                );
-                state.units.insert(
-                    id,
-                    Unit,
-                );
+                let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
+                state.cells.insert(*address, id);
+                state.units.insert(id, Unit);
             }
         }
     }
