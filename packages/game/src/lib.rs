@@ -106,10 +106,10 @@ impl <'a>HydratedGameState<'a> {
         }
     }
     fn merge_near_units(&mut self,target_unit_id: &UnitId) {
-        let current_unit = self.units.get(target_unit_id).unwrap();
+        let target_unit = self.units.get(target_unit_id).unwrap();
         let cells = &self.state.cells;
         let near_unit_ids: HashSet<UnitId> = 
-            current_unit.addresses
+            target_unit.addresses
             .iter()
             .flat_map(|address| {
                 let directions = Direction::directions();

@@ -11,6 +11,7 @@ fn get_window() -> web_sys::Window {
 
 const MAP_PX: u32 = 1024;
 fn main() -> Result<(), JsValue> {
+    console_error_panic_hook::set_once();
     console::log_1(&"Hello world!".into());
     // body配下にcanvasを追加
     let window = window().ok_or_else(|| JsValue::from_str("No global `window` exists"))?;
