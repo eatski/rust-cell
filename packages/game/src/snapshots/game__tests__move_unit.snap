@@ -1,0 +1,20 @@
+---
+source: src/lib.rs
+expression: hydrated.state
+---
+GameState {
+    cells: {
+        Address {
+            x: 1,
+            y: 0,
+        }: 0,
+        Address {
+            x: 2,
+            y: 0,
+        }: 1,
+    },
+    units: {
+        1: Unit,
+        0: Unit,
+    },
+}
