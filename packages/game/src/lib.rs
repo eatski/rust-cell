@@ -104,7 +104,8 @@ impl<'a> HydratedGameState<'a> {
         }
     }
     fn merge_near_units(&mut self, target_unit_id: &UnitId) {
-        let target_unit = self.units.get(target_unit_id).unwrap();
+        let cloned_units = self.units.clone();
+        let target_unit = self.units.get_mut(target_unit_id).unwrap();
         let cells = &self.state.cells;
         let near_unit_ids: HashSet<UnitId> = target_unit
             .addresses
@@ -120,9 +121,10 @@ impl<'a> HydratedGameState<'a> {
             .collect();
         // near_unit_idのunitを吸収する
         for near_id in near_unit_ids.iter() {
-            let unit = self.units.get(near_id).unwrap();
-            for address in unit.addresses.iter() {
+            let near_unit = cloned_units.get(near_id).unwrap();
+            for address in near_unit.addresses.iter() {
                 self.state.cells.insert(*address, *target_unit_id);
+                target_unit.addresses.push(*address);
             }
             self.state.units.remove(near_id);
         }
@@ -184,7 +186,7 @@ mod tests {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 struct HydratedUnit {
     unit: Unit,
     addresses: Vec<Address>,
@@ -209,13 +211,12 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>) {
             hydrated.merge_near_units(current_unit_id);
         }
     }
-    for input in inputs {
-        match input {
-            Input::Click { address } => {
-                let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
-                state.cells.insert(*address, id);
-                state.units.insert(id, Unit);
-            }
+    match inputs.last() {
+        Some(Input::Click { address }) => {
+            let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
+            state.cells.insert(*address, id);
+            state.units.insert(id, Unit);
         }
+        None => {},
     }
 }
