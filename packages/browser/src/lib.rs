@@ -34,8 +34,8 @@ impl CanvasView {
         let events = Rc::new(RefCell::new(Vec::new()));
         let events_for_closure = events.clone();
         let closure = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            let x = event.client_x() as f64;
-            let y = event.client_y() as f64;
+            let x = event.offset_x() as f64;
+            let y = event.offset_y() as f64;
             let address = game::Address {
                 x: (x / CELL_SIZE) as isize,
                 y: (y / CELL_SIZE) as isize,

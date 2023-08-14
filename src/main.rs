@@ -28,6 +28,7 @@ fn main() -> Result<(), JsValue> {
     let canvas: HtmlCanvasElement = canvas.dyn_into()?;
     canvas.set_width(MAP_PX);
     canvas.set_height(MAP_PX);
+    canvas.set_attribute("style", "border: 1px solid black;cursor: pointer;")?;
     let context = canvas
         .get_context("2d")?
         .ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
