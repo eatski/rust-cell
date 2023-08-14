@@ -1,6 +1,6 @@
 ---
 source: src/lib.rs
-expression: hydrated.original
+expression: state
 ---
 GameState {
     cells: {

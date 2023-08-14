@@ -1,4 +1,4 @@
-use std::{collections::{BTreeMap, BTreeSet}, mem};
+use std::collections::{BTreeMap, BTreeSet};
 
 use rand::{seq::SliceRandom, Rng};
 
@@ -73,54 +73,44 @@ pub struct GameState {
 
 #[derive(Debug)]
 struct HydratedGameState<'a> {
-    units: BTreeMap<UnitId, HydratedUnit>,
-    original: &'a mut GameState,
+    map: RelationalOneToMany<'a,UnitId,Address>,
+    units: &'a mut BTreeMap<UnitId, Unit>,
 }
 
 impl<'a> HydratedGameState<'a> {
     fn new(state: &'a mut GameState) -> Self {
-        let mut units: BTreeMap<UnitId, HydratedUnit> = BTreeMap::new();
-        for (address, unit_id) in state.cells.iter() {
-            let unit_original = state.units.get(unit_id).unwrap();
-            let unit = units.entry(*unit_id).or_insert(HydratedUnit {
-                unit: unit_original.clone(),
-                addresses: Default::default(),
-            });
-            unit.addresses.insert(*address);
-        }
         Self {
-            units,
-            original: state,
+            map: (&mut state.cells).into(),
+            units: &mut state.units,
         }
     }
     fn move_unit(&mut self, unit_id: &UnitId, direction: &Direction) {
         let unit = self.units.get_mut(unit_id).unwrap();
-        if unit.unit.order != Some(PlayerOrder::Stop) {
-            let next_addresses: BTreeSet<Address> = unit
-                .addresses
+        if unit.order != Some(PlayerOrder::Stop) {
+            let current_addresses = self.map.get_one_to_many().get(unit_id).unwrap().clone();
+            let next_addresses = 
+                current_addresses
                 .iter()
-                .map(|address| address.next(direction))
-                .collect();
-            let is_collision = next_addresses.iter().any(|address| {
-                let next_unit_id = self.original.cells.get(address);
+                .map(|address| address.next(direction));
+                
+            let is_collision = next_addresses.clone().any(|address| {
+                let next_unit_id = self.map.get_many_to_one().get(&address);
                 next_unit_id.map(|id| id != unit_id).unwrap_or(false)
             });
             if !is_collision {
-                for address in unit.addresses.iter() {
-                    self.original.cells.remove(address);
+                for address in current_addresses.iter() {
+                    self.map.remove_many(&address);
                 }
-                for address in next_addresses.iter() {
-                    self.original.cells.insert(*address, *unit_id);
+                for address in next_addresses {
+                    self.map.insert_many(unit_id, &address);
                 }
-                unit.addresses = next_addresses;
             }
         }
     }
     fn merge_near_units(&mut self, target_unit_id: &UnitId) {
-        let target_unit = self.units.get_mut(target_unit_id).unwrap();
-        let cells = &self.original.cells;
-        let near_unit_ids: BTreeSet<UnitId> = target_unit
-            .addresses
+        let cells = self.map.get_many_to_one();
+        let addresses = self.map.get_one_to_many().get(target_unit_id).unwrap();
+        let near_unit_ids: BTreeSet<UnitId> = addresses
             .iter()
             .flat_map(|address| {
                 let directions = Direction::directions();
@@ -140,43 +130,20 @@ impl<'a> HydratedGameState<'a> {
      * source_unit_idのaddressをdestination_unit_idに移動する
      */
     fn shift_addresses(&mut self, source_unit_id: &UnitId, destination_unit_id: &UnitId) {
-        let addresses_to_shft: Vec<_> = {
-            let source_unit = self.units.get_mut(source_unit_id).unwrap();
-            let addresses = mem::take(&mut source_unit
-                .addresses
-                ).into_iter()
-                .collect();
-            addresses
-        };
-        let destination_unit = self.units.get_mut(destination_unit_id).unwrap();
-        for address in addresses_to_shft.iter() {
-            self.original.cells.insert(*address, *destination_unit_id);
+        let source_addresses = self.map.get_one_to_many().get(source_unit_id).unwrap().clone();
+        for address in source_addresses.iter() {
+            self.map.remove_many(&address);
         }
-        destination_unit.addresses.extend(addresses_to_shft);
-        self.original.units.remove(source_unit_id);
+        for address in source_addresses {
+            self.map.insert_many(destination_unit_id, &address);
+        }
+        self.units.remove(source_unit_id);
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    fn init_mock_state() -> GameState {
-        GameState {
-            cells: [(Address { x: 0, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
-            units: [(0, Unit::default()), (1, Unit::default())].into(),
-        }
-    }
-
-    #[test]
-    fn new() {
-        let mut state = GameState {
-            cells: [(Address { x: 0, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
-            units: [(0, Unit::default()), (1, Unit::default())].into(),
-        };
-        let hydrated = HydratedGameState::new(&mut state);
-        insta::assert_debug_snapshot!(hydrated);
-    }
 
     #[test]
     fn move_unit() {
@@ -186,7 +153,7 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Right);
-        insta::assert_debug_snapshot!(hydrated.original);
+        insta::assert_debug_snapshot!(state);
     }
 
     #[test]
@@ -197,7 +164,7 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Left);
-        insta::assert_debug_snapshot!(hydrated.original);
+        insta::assert_debug_snapshot!(state);
     }
 
     #[test]
@@ -211,7 +178,7 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Left);
-        insta::assert_debug_snapshot!(hydrated.original);
+        insta::assert_debug_snapshot!(state);
     }
 
     #[test]
@@ -222,14 +189,8 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.merge_near_units(&0);
-        insta::assert_debug_snapshot!(hydrated.original);
+        insta::assert_debug_snapshot!(state);
     }
-}
-
-#[derive(Debug, Clone)]
-struct HydratedUnit {
-    unit: Unit,
-    addresses: BTreeSet<Address>,
 }
 
 /**
@@ -305,5 +266,60 @@ mod update_test {
             &mut rng,
         );
         insta::assert_debug_snapshot!(state);
+    }
+}
+
+
+#[derive(Debug)]
+struct RelationalOneToMany<'a,OneKey,ManyKey>{
+    one_to_many: BTreeMap<OneKey, BTreeSet<ManyKey>>,
+    original: &'a mut BTreeMap<ManyKey, OneKey>,
+}
+
+impl <'a,OneKey: Ord + Clone,ManyKey: Clone + Ord>From<&'a mut BTreeMap<ManyKey,OneKey>> for RelationalOneToMany<'a,OneKey,ManyKey> {
+    fn from(original: &'a mut BTreeMap<ManyKey,OneKey>) -> Self {
+        let one_to_many = original.iter().fold(BTreeMap::new(), |mut acc, (many_key, one_key)| {
+            acc.entry(one_key.clone()).or_insert_with(BTreeSet::new).insert(many_key.clone());
+            acc
+        });
+        RelationalOneToMany {
+            one_to_many,
+            original,
+        }
+    }
+}
+
+impl <'a,OneKey: Ord + Clone,ManyKey: Ord + Clone>RelationalOneToMany<'a,OneKey,ManyKey> {
+    fn get_one_to_many(&self) -> &BTreeMap<OneKey, BTreeSet<ManyKey>> {
+        &self.one_to_many
+    }
+    fn get_many_to_one(&self) -> &BTreeMap<ManyKey, OneKey> {
+        &self.original
+    }
+    fn insert_many(&mut self, one_key: &OneKey, many_key: &ManyKey) {
+        self.original.insert(many_key.clone(), one_key.clone());
+        self.one_to_many.entry(one_key.clone()).or_insert_with(BTreeSet::new).insert(many_key.clone());
+    }
+    fn remove_many(&mut self, many_key: &ManyKey) {
+        if let Some(one_key) = self.original.remove(many_key) {
+            if let Some(many_keys) = self.one_to_many.get_mut(&one_key) {
+                many_keys.remove(many_key);
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod relational_one_to_many_test {
+    use super::*;
+
+    #[test]
+    fn new() {
+        let mut original = BTreeMap::new();
+        original.insert(0, 0);
+        original.insert(1, 0);
+        original.insert(2, 1);
+        let relational = RelationalOneToMany::from(&mut original);
+        insta::assert_debug_snapshot!(relational);
     }
 }
