@@ -67,7 +67,7 @@ pub struct GameState {
 #[derive(Debug)]
 struct HydratedGameState<'a> {
     units: HashMap<UnitId, HydratedUnit>,
-    state: &'a mut GameState,
+    original: &'a mut GameState,
 }
 
 impl<'a> HydratedGameState<'a> {
@@ -80,7 +80,7 @@ impl<'a> HydratedGameState<'a> {
             });
             unit.addresses.push(*address);
         }
-        Self { units, state }
+        Self { units, original: state }
     }
     fn move_unit(&mut self, unit_id: &UnitId, direction: &Direction) {
         let unit = self.units.get_mut(unit_id).unwrap();
@@ -90,15 +90,15 @@ impl<'a> HydratedGameState<'a> {
             .map(|address| address.next(direction))
             .collect();
         let is_collision = next_addresses.iter().any(|address| {
-            let next_unit_id = self.state.cells.get(address);
+            let next_unit_id = self.original.cells.get(address);
             next_unit_id.map(|id| id != unit_id).unwrap_or(false)
         });
         if !is_collision {
             for address in unit.addresses.iter() {
-                self.state.cells.remove(address);
+                self.original.cells.remove(address);
             }
             for address in next_addresses.iter() {
-                self.state.cells.insert(*address, *unit_id);
+                self.original.cells.insert(*address, *unit_id);
             }
             unit.addresses = next_addresses;
         }
@@ -106,7 +106,7 @@ impl<'a> HydratedGameState<'a> {
     fn merge_near_units(&mut self, target_unit_id: &UnitId) {
         let cloned_units = self.units.clone();
         let target_unit = self.units.get_mut(target_unit_id).unwrap();
-        let cells = &self.state.cells;
+        let cells = &self.original.cells;
         let near_unit_ids: HashSet<UnitId> = target_unit
             .addresses
             .iter()
@@ -123,10 +123,10 @@ impl<'a> HydratedGameState<'a> {
         for near_id in near_unit_ids.iter() {
             let near_unit = cloned_units.get(near_id).unwrap();
             for address in near_unit.addresses.iter() {
-                self.state.cells.insert(*address, *target_unit_id);
+                self.original.cells.insert(*address, *target_unit_id);
                 target_unit.addresses.push(*address);
             }
-            self.state.units.remove(near_id);
+            self.original.units.remove(near_id);
         }
     }
 }
