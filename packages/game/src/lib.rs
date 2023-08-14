@@ -84,9 +84,9 @@ impl<'a> HydratedGameState<'a> {
             let unit_original = state.units.get(unit_id).unwrap();
             let unit = units.entry(*unit_id).or_insert(HydratedUnit {
                 unit: unit_original.clone(),
-                addresses: Vec::new(),
+                addresses: Default::default(),
             });
-            unit.addresses.push(*address);
+            unit.addresses.insert(*address);
         }
         Self {
             units,
@@ -96,7 +96,7 @@ impl<'a> HydratedGameState<'a> {
     fn move_unit(&mut self, unit_id: &UnitId, direction: &Direction) {
         let unit = self.units.get_mut(unit_id).unwrap();
         if unit.unit.order != Some(PlayerOrder::Stop) {
-            let next_addresses: Vec<Address> = unit
+            let next_addresses: HashSet<Address> = unit
                 .addresses
                 .iter()
                 .map(|address| address.next(direction))
@@ -144,7 +144,7 @@ impl<'a> HydratedGameState<'a> {
             let source_unit = self.units.get_mut(source_unit_id).unwrap();
             let addresses = source_unit
                 .addresses
-                .drain(0..source_unit.addresses.len())
+                .drain()
                 .collect();
             addresses
         };
@@ -229,7 +229,7 @@ mod tests {
 #[derive(Debug, Clone)]
 struct HydratedUnit {
     unit: Unit,
-    addresses: Vec<Address>,
+    addresses: HashSet<Address>,
 }
 
 /**

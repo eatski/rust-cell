@@ -8,35 +8,35 @@ HydratedGameState {
             unit: Unit {
                 order: None,
             },
-            addresses: [
+            addresses: {
                 Address {
                     x: 2,
                     y: 0,
                 },
-            ],
+            },
         },
         0: HydratedUnit {
             unit: Unit {
                 order: None,
             },
-            addresses: [
+            addresses: {
                 Address {
                     x: 0,
                     y: 0,
                 },
-            ],
+            },
         },
     },
     original: GameState {
         cells: {
             Address {
-                x: 2,
-                y: 0,
-            }: 1,
-            Address {
                 x: 0,
                 y: 0,
             }: 0,
+            Address {
+                x: 2,
+                y: 0,
+            }: 1,
         },
         units: {
             1: Unit {
