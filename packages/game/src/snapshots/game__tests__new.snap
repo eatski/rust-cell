@@ -23,16 +23,16 @@ HydratedGameState {
             ],
         },
     },
-    state: GameState {
+    original: GameState {
         cells: {
-            Address {
-                x: 0,
-                y: 0,
-            }: 0,
             Address {
                 x: 2,
                 y: 0,
             }: 1,
+            Address {
+                x: 0,
+                y: 0,
+            }: 0,
         },
         units: {
             1: Unit,

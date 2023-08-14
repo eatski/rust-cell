@@ -1,6 +1,6 @@
 ---
 source: src/lib.rs
-expression: hydrated.state
+expression: hydrated.original
 ---
 GameState {
     cells: {
@@ -14,7 +14,7 @@ GameState {
         }: 1,
     },
     units: {
-        1: Unit,
         0: Unit,
+        1: Unit,
     },
 }

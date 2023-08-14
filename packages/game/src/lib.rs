@@ -104,7 +104,6 @@ impl<'a> HydratedGameState<'a> {
         }
     }
     fn merge_near_units(&mut self, target_unit_id: &UnitId) {
-        let cloned_units = self.units.clone();
         let target_unit = self.units.get_mut(target_unit_id).unwrap();
         let cells = &self.original.cells;
         let near_unit_ids: HashSet<UnitId> = target_unit
@@ -121,13 +120,24 @@ impl<'a> HydratedGameState<'a> {
             .collect();
         // near_unit_idのunitを吸収する
         for near_id in near_unit_ids.iter() {
-            let near_unit = cloned_units.get(near_id).unwrap();
-            for address in near_unit.addresses.iter() {
-                self.original.cells.insert(*address, *target_unit_id);
-                target_unit.addresses.push(*address);
-            }
-            self.original.units.remove(near_id);
+            self.shift_addresses(near_id, target_unit_id);
         }
+    }
+    /**
+     * source_unit_idのaddressをdestination_unit_idに移動する
+     */
+   fn shift_addresses(&mut self, source_unit_id: &UnitId, destination_unit_id: &UnitId) {
+        let addresses_to_shft: Vec<_> = {
+            let source_unit = self.units.get_mut(source_unit_id).unwrap();
+            let addresses = source_unit.addresses.drain(0..source_unit.addresses.len()).collect();
+            addresses
+        };
+        let destination_unit = self.units.get_mut(destination_unit_id).unwrap();
+        for address in addresses_to_shft.iter() {
+            self.original.cells.insert(*address, *destination_unit_id);
+        }
+        destination_unit.addresses.extend(addresses_to_shft);
+        self.original.units.remove(source_unit_id);
     }
 }
 
@@ -160,7 +170,7 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Right);
-        insta::assert_debug_snapshot!(hydrated.state);
+        insta::assert_debug_snapshot!(hydrated.original);
     }
 
     #[test]
@@ -171,7 +181,7 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Left);
-        insta::assert_debug_snapshot!(hydrated.state);
+        insta::assert_debug_snapshot!(hydrated.original);
     }
 
     #[test]
@@ -182,7 +192,7 @@ mod tests {
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.merge_near_units(&0);
-        insta::assert_debug_snapshot!(hydrated.state);
+        insta::assert_debug_snapshot!(hydrated.original);
     }
 }
 
