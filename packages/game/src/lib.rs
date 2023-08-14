@@ -211,22 +211,19 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
             hydrated.merge_near_units(current_unit_id);
         }
     }
-    match inputs.last() {
-        Some(Input::Click { address }) => {
-            if let Some(unit_id) = state.cells.get(address) {
-                let unit = state.units.get_mut(unit_id).unwrap();
-                if Some(PlayerOrder::Stop) == unit.order {
-                    unit.order = None;
-                } else {
-                    unit.order = Some(PlayerOrder::Stop);
-                }
+    if let Some(Input::Click { address }) = inputs.last() {
+        if let Some(unit_id) = state.cells.get(address) {
+            let unit = state.units.get_mut(unit_id).unwrap();
+            if Some(PlayerOrder::Stop) == unit.order {
+                unit.order = None;
             } else {
-                let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
-                state.cells.insert(*address, id);
-                state.units.insert(id, Unit::default());
+                unit.order = Some(PlayerOrder::Stop);
             }
+        } else {
+            let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
+            state.cells.insert(*address, id);
+            state.units.insert(id, Unit::default());
         }
-        None => {}
     }
 }
 
