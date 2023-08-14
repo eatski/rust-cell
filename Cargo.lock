@@ -38,7 +38,6 @@ dependencies = [
 name = "game"
 version = "0.1.0"
 dependencies = [
- "getrandom",
  "rand",
 ]
 
@@ -143,7 +142,9 @@ dependencies = [
  "browser",
  "console_error_panic_hook",
  "game",
+ "getrandom",
  "js-sys",
+ "rand",
  "wasm-bindgen",
  "web-sys",
 ]

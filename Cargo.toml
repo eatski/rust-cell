@@ -20,4 +20,6 @@ js-sys = "0.3"
 browser = { path = "./packages/browser"}
 game = { path = "./packages/game"}
 console_error_panic_hook = "0.1.0"
+rand = { version = "0.8" }
+getrandom = { version = "0.2", features = ["js"] }
 

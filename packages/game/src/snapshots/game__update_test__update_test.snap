@@ -1,21 +1,26 @@
 ---
 source: src/lib.rs
-expression: hydrated.original
+expression: state
 ---
 GameState {
     cells: {
         Address {
             x: 0,
             y: 0,
-        }: 0,
+        }: 1,
         Address {
             x: 1,
-            y: 0,
-        }: 0,
+            y: 2,
+        }: 2,
     },
     units: {
-        0: Unit {
+        2: Unit {
             order: None,
+        },
+        1: Unit {
+            order: Some(
+                Stop,
+            ),
         },
     },
 }

@@ -14,7 +14,11 @@ GameState {
         }: 1,
     },
     units: {
-        0: Unit,
-        1: Unit,
+        0: Unit {
+            order: None,
+        },
+        1: Unit {
+            order: None,
+        },
     },
 }

@@ -39,12 +39,16 @@ fn main() -> Result<(), JsValue> {
     let drawer = CanvasView::new(context);
 
     let events = drawer.init_input_receiver();
-
+    let mut rng = rand::thread_rng();
     // pointsをcalc_next_pointsしながら繰り返し描画する
     set_interval_with_request_animation_frame(
         move |events| {
             drawer.draw(&state);
-            update(&mut state, &events);
+            update(
+                &mut state, 
+                &events,
+                &mut rng,
+            );
         },
         events,
     );

@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 rand = { version = "0.8" }
-getrandom = { version = "0.2", features = ["js"] }
 
 [dev-dependencies]
 insta = { version = "1.31.0", features = ["yaml"] }

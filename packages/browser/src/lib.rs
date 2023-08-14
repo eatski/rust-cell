@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use wasm_bindgen::{prelude::Closure, JsCast};
+use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::CanvasRenderingContext2d;
 
 const CELL_SIZE: f64 = 16.0;
@@ -19,15 +19,24 @@ impl CanvasView {
         let context = &self.canvas_context;
         context.clear_rect(0.0, 0.0, MAP_PX.into(), MAP_PX.into());
         context.begin_path();
-        for (address, _) in state.cells.iter() {
-            context.rect(
+        for (address, unit_id) in state.cells.iter() {
+            let unit = state.units.get(unit_id).unwrap();
+            if unit.order == Some(game::PlayerOrder::Stop) {
+                context.set_fill_style(&JsValue::from_str("red"));
+            } else {
+                context.set_fill_style(&JsValue::from_str("black"));
+            }
+            context.fill_rect(
                 address.x as f64 * CELL_SIZE,
                 address.y as f64 * CELL_SIZE,
                 CELL_SIZE,
                 CELL_SIZE,
             );
+            
         }
         context.fill();
+
+        
     }
     pub fn init_input_receiver(&self) -> Rc<RefCell<Vec<game::Input>>> {
         let canvas = self.canvas_context.canvas().unwrap();
