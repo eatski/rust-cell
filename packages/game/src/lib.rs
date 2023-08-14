@@ -1,8 +1,8 @@
-use std::collections::{HashMap, HashSet};
+use std::{collections::{BTreeMap, BTreeSet}, mem};
 
 use rand::{seq::SliceRandom, Rng};
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy,PartialOrd, Ord)]
 pub struct Address {
     pub x: isize,
     pub y: isize,
@@ -67,19 +67,19 @@ type UnitId = usize;
 
 #[derive(Debug, Default)]
 pub struct GameState {
-    pub cells: HashMap<Address, UnitId>,
-    pub units: HashMap<UnitId, Unit>,
+    pub cells: BTreeMap<Address, UnitId>,
+    pub units: BTreeMap<UnitId, Unit>,
 }
 
 #[derive(Debug)]
 struct HydratedGameState<'a> {
-    units: HashMap<UnitId, HydratedUnit>,
+    units: BTreeMap<UnitId, HydratedUnit>,
     original: &'a mut GameState,
 }
 
 impl<'a> HydratedGameState<'a> {
     fn new(state: &'a mut GameState) -> Self {
-        let mut units: HashMap<UnitId, HydratedUnit> = HashMap::new();
+        let mut units: BTreeMap<UnitId, HydratedUnit> = BTreeMap::new();
         for (address, unit_id) in state.cells.iter() {
             let unit_original = state.units.get(unit_id).unwrap();
             let unit = units.entry(*unit_id).or_insert(HydratedUnit {
@@ -96,7 +96,7 @@ impl<'a> HydratedGameState<'a> {
     fn move_unit(&mut self, unit_id: &UnitId, direction: &Direction) {
         let unit = self.units.get_mut(unit_id).unwrap();
         if unit.unit.order != Some(PlayerOrder::Stop) {
-            let next_addresses: HashSet<Address> = unit
+            let next_addresses: BTreeSet<Address> = unit
                 .addresses
                 .iter()
                 .map(|address| address.next(direction))
@@ -119,7 +119,7 @@ impl<'a> HydratedGameState<'a> {
     fn merge_near_units(&mut self, target_unit_id: &UnitId) {
         let target_unit = self.units.get_mut(target_unit_id).unwrap();
         let cells = &self.original.cells;
-        let near_unit_ids: HashSet<UnitId> = target_unit
+        let near_unit_ids: BTreeSet<UnitId> = target_unit
             .addresses
             .iter()
             .flat_map(|address| {
@@ -142,9 +142,9 @@ impl<'a> HydratedGameState<'a> {
     fn shift_addresses(&mut self, source_unit_id: &UnitId, destination_unit_id: &UnitId) {
         let addresses_to_shft: Vec<_> = {
             let source_unit = self.units.get_mut(source_unit_id).unwrap();
-            let addresses = source_unit
+            let addresses = mem::take(&mut source_unit
                 .addresses
-                .drain()
+                ).into_iter()
                 .collect();
             addresses
         };
@@ -229,7 +229,7 @@ mod tests {
 #[derive(Debug, Clone)]
 struct HydratedUnit {
     unit: Unit,
-    addresses: HashSet<Address>,
+    addresses: BTreeSet<Address>,
 }
 
 /**

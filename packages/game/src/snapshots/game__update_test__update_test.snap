@@ -14,13 +14,13 @@ GameState {
         }: 2,
     },
     units: {
-        2: Unit {
-            order: None,
-        },
         1: Unit {
             order: Some(
                 Stop,
             ),
+        },
+        2: Unit {
+            order: None,
         },
     },
 }

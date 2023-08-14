@@ -4,17 +4,6 @@ expression: hydrated
 ---
 HydratedGameState {
     units: {
-        1: HydratedUnit {
-            unit: Unit {
-                order: None,
-            },
-            addresses: {
-                Address {
-                    x: 2,
-                    y: 0,
-                },
-            },
-        },
         0: HydratedUnit {
             unit: Unit {
                 order: None,
@@ -22,6 +11,17 @@ HydratedGameState {
             addresses: {
                 Address {
                     x: 0,
+                    y: 0,
+                },
+            },
+        },
+        1: HydratedUnit {
+            unit: Unit {
+                order: None,
+            },
+            addresses: {
+                Address {
+                    x: 2,
                     y: 0,
                 },
             },
@@ -39,10 +39,10 @@ HydratedGameState {
             }: 1,
         },
         units: {
-            1: Unit {
+            0: Unit {
                 order: None,
             },
-            0: Unit {
+            1: Unit {
                 order: None,
             },
         },
