@@ -214,7 +214,7 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>) {
     units_to_iter.shuffle(&mut rng);
     let mut hydrated = HydratedGameState::new(state);
     for (current_unit_id, _) in units_to_iter.iter() {
-        if rng.gen_range(0..8) == 0 {
+        if rng.gen_range(0..16) == 0 {
             let directions = Direction::directions();
             let direction = directions.choose(&mut rng).unwrap();
             hydrated.move_unit(current_unit_id, direction);

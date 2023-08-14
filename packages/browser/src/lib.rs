@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast};
 use web_sys::CanvasRenderingContext2d;
 
-const CELL_SIZE: f64 = 8.0;
+const CELL_SIZE: f64 = 16.0;
 const MAP_PX: u32 = 1024;
 
 #[derive(Debug, Clone)]
