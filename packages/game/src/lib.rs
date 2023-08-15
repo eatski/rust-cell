@@ -214,10 +214,10 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     if let Some(Input::Click { address }) = inputs.last() {
         if let Some(unit_id) = state.cells.get(address) {
             let unit = state.units.get_mut(unit_id).unwrap();
-            if Some(PlayerOrder::Stop) == unit.order {
-                unit.order = None;
+            unit.order = if Some(PlayerOrder::Stop) == unit.order {
+                None
             } else {
-                unit.order = Some(PlayerOrder::Stop);
+                Some(PlayerOrder::Stop)
             }
         } else {
             let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
