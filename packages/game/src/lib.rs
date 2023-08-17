@@ -1,6 +1,6 @@
-use std::collections::{BTreeMap, BTreeSet};
+use std::{collections::{BTreeMap, BTreeSet}, ops::Add};
 
-use rand::{seq::SliceRandom, Rng};
+use rand::{seq::{SliceRandom, IteratorRandom}, Rng};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
 pub struct Address {
@@ -8,43 +8,25 @@ pub struct Address {
     pub y: isize,
 }
 
-enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
+pub struct RelativePath {
+    pub x: isize,
+    pub y: isize,
 }
 
-impl Direction {
-    fn directions() -> Vec<Self> {
-        vec![
-            Direction::Up,
-            Direction::Down,
-            Direction::Left,
-            Direction::Right,
-        ]
-    }
-}
+const NEXT_PATHES : [RelativePath; 4] = [
+    RelativePath { x: 0, y: -1 },
+    RelativePath { x: 0, y: 1 },
+    RelativePath { x: -1, y: 0 },
+    RelativePath { x: 1, y: 0 },
+];
 
-impl Address {
-    fn next(&self, direction: &Direction) -> Self {
-        match direction {
-            Direction::Up => Address {
-                x: self.x,
-                y: self.y - 1,
-            },
-            Direction::Down => Address {
-                x: self.x,
-                y: self.y + 1,
-            },
-            Direction::Left => Address {
-                x: self.x - 1,
-                y: self.y,
-            },
-            Direction::Right => Address {
-                x: self.x + 1,
-                y: self.y,
-            },
+impl Add<&RelativePath> for &Address {
+    type Output = Address;
+    fn add(self, rhs: &RelativePath) -> Self::Output {
+        Address {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
         }
     }
 }
@@ -84,13 +66,13 @@ impl<'a> HydratedGameState<'a> {
             units: &mut state.units,
         }
     }
-    fn move_unit(&mut self, unit_id: &UnitId, direction: &Direction) {
+    fn move_unit(&mut self, unit_id: &UnitId, direction: &RelativePath) {
         let unit = self.units.get_mut(unit_id).unwrap();
         if unit.order != Some(PlayerOrder::Stop) {
             let current_addresses = self.map.get_one_to_many().get(unit_id).unwrap().clone();
             let next_addresses = current_addresses
                 .iter()
-                .map(|address| address.next(direction));
+                .map(|address| address + direction);
 
             let is_collision = next_addresses.clone().any(|address| {
                 let next_unit_id = self.map.get_many_to_one().get(&address);
@@ -112,10 +94,10 @@ impl<'a> HydratedGameState<'a> {
         let near_unit_ids: BTreeSet<UnitId> = addresses
             .iter()
             .flat_map(|address| {
-                let directions = Direction::directions();
+                let directions = NEXT_PATHES;
                 directions
                     .into_iter()
-                    .map(move |direction| cells.get(&address.next(&direction)))
+                    .map(move |direction| cells.get(&(address + &direction)))
             })
             .filter(|unit_id| unit_id.map(|id| id != target_unit_id).unwrap_or(false))
             .filter_map(|unit_id| unit_id.copied())
@@ -164,7 +146,7 @@ mod tests {
             units: [(0, Unit::default()), (1, Unit::default())].into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
-        hydrated.move_unit(&0, &Direction::Right);
+        hydrated.move_unit(&0, &RelativePath { x: 1, y: 0 });
         insta::assert_debug_snapshot!(state);
     }
 
@@ -175,7 +157,7 @@ mod tests {
             units: [(0, Unit::default())].into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
-        hydrated.move_unit(&0, &Direction::Left);
+        hydrated.move_unit(&0, &RelativePath { x: -1, y: 0 });
         insta::assert_debug_snapshot!(state);
     }
 
@@ -193,7 +175,7 @@ mod tests {
             .into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
-        hydrated.move_unit(&0, &Direction::Left);
+        hydrated.move_unit(&0, &RelativePath { x: -1, y: 0 });
         insta::assert_debug_snapshot!(state);
     }
 
@@ -221,8 +203,7 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let mut hydrated = HydratedGameState::new(state);
     for (current_unit_id, _) in units_to_iter.iter() {
         if rng.gen_range(0..32) == 0 {
-            let directions = Direction::directions();
-            let direction = directions.choose(rng).unwrap();
+            let direction = NEXT_PATHES.iter().choose(rng).unwrap();
             hydrated.move_unit(current_unit_id, direction);
             hydrated.merge_near_units(current_unit_id);
         }
