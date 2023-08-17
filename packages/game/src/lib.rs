@@ -1,6 +1,12 @@
-use std::{collections::{BTreeMap, BTreeSet}, ops::Add};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    ops::Add,
+};
 
-use rand::{seq::{SliceRandom, IteratorRandom}, Rng};
+use rand::{
+    seq::{IteratorRandom, SliceRandom},
+    Rng,
+};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
 pub struct Address {
@@ -14,7 +20,7 @@ pub struct RelativePath {
     pub y: isize,
 }
 
-const NEXT_PATHES : [RelativePath; 4] = [
+const NEXT_PATHES: [RelativePath; 4] = [
     RelativePath { x: 0, y: -1 },
     RelativePath { x: 0, y: 1 },
     RelativePath { x: -1, y: 0 },
@@ -70,9 +76,7 @@ impl<'a> HydratedGameState<'a> {
         let unit = self.units.get_mut(unit_id).unwrap();
         if unit.order != Some(PlayerOrder::Stop) {
             let current_addresses = self.map.get_one_to_many().get(unit_id).unwrap().clone();
-            let next_addresses = current_addresses
-                .iter()
-                .map(|address| address + direction);
+            let next_addresses = current_addresses.iter().map(|address| address + direction);
 
             let is_collision = next_addresses.clone().any(|address| {
                 let next_unit_id = self.map.get_many_to_one().get(&address);
