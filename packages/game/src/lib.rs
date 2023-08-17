@@ -283,22 +283,15 @@ mod update_test {
             }],
             &mut rng,
         );
-        update(
-            &mut state,
-            &vec![Input::Click {
-                address: Address { x: 0, y: 0 },
-            }],
-            &mut rng,
-        );
-        for _ in 0..20 {
+        for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state);
-        for _ in 0..20 {
+        for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state);
-        for _ in 0..20 {
+        for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state);
