@@ -283,6 +283,13 @@ mod update_test {
             }],
             &mut rng,
         );
+        update(
+            &mut state,
+            &vec![Input::Click {
+                address: Address { x: 5, y: 4 },
+            }],
+            &mut rng,
+        );
         for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
@@ -291,7 +298,7 @@ mod update_test {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state);
-        for _ in 0..50 {
+        for _ in 0..100000 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state);

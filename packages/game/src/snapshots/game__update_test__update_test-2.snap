@@ -5,23 +5,30 @@ expression: state
 GameState {
     cells: {
         Address {
-            x: 0,
-            y: 1,
+            x: -1,
+            y: 2,
         }: 2,
         Address {
-            x: 1,
-            y: 1,
+            x: -1,
+            y: 3,
         }: 2,
         Address {
             x: 5,
-            y: -1,
+            y: -2,
         }: 3,
+        Address {
+            x: 5,
+            y: 3,
+        }: 4,
     },
     units: {
         2: Unit {
             order: None,
         },
         3: Unit {
+            order: None,
+        },
+        4: Unit {
             order: None,
         },
     },
