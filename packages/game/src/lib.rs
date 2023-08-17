@@ -2,7 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use rand::{seq::SliceRandom, Rng};
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy,PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
 pub struct Address {
     pub x: isize,
     pub y: isize,
@@ -73,7 +73,7 @@ pub struct GameState {
 
 #[derive(Debug)]
 struct HydratedGameState<'a> {
-    map: RelationalOneToMany<'a,UnitId,Address>,
+    map: RelationalOneToMany<'a, UnitId, Address>,
     units: &'a mut BTreeMap<UnitId, Unit>,
 }
 
@@ -88,11 +88,10 @@ impl<'a> HydratedGameState<'a> {
         let unit = self.units.get_mut(unit_id).unwrap();
         if unit.order != Some(PlayerOrder::Stop) {
             let current_addresses = self.map.get_one_to_many().get(unit_id).unwrap().clone();
-            let next_addresses = 
-                current_addresses
+            let next_addresses = current_addresses
                 .iter()
                 .map(|address| address.next(direction));
-                
+
             let is_collision = next_addresses.clone().any(|address| {
                 let next_unit_id = self.map.get_many_to_one().get(&address);
                 next_unit_id.map(|id| id != unit_id).unwrap_or(false)
@@ -130,7 +129,12 @@ impl<'a> HydratedGameState<'a> {
      * source_unit_idのaddressをdestination_unit_idに移動する
      */
     fn shift_addresses(&mut self, source_unit_id: &UnitId, destination_unit_id: &UnitId) {
-        let source_addresses = self.map.get_one_to_many().get(source_unit_id).unwrap().clone();
+        let source_addresses = self
+            .map
+            .get_one_to_many()
+            .get(source_unit_id)
+            .unwrap()
+            .clone();
         for address in source_addresses.iter() {
             self.map.remove_many(&address);
         }
@@ -142,7 +146,7 @@ impl<'a> HydratedGameState<'a> {
     /**
      * unitを新しくスポーンさせる
      */
-    fn spawn_unit(&mut self,address: &Address) {
+    fn spawn_unit(&mut self, address: &Address) {
         let unit_id = self.units.keys().max().unwrap_or(&0) + 1;
         self.map.insert_many(&unit_id, address);
         self.units.insert(unit_id, Unit::default());
@@ -179,10 +183,14 @@ mod tests {
     fn move_unit_stop() {
         let mut state = GameState {
             cells: [(Address { x: 1, y: 0 }, 0), (Address { x: 2, y: 0 }, 0)].into(),
-            units: [(0,  Unit {
-                order: Some(PlayerOrder::Stop),
-                ..Unit::default()
-            })].into(),
+            units: [(
+                0,
+                Unit {
+                    order: Some(PlayerOrder::Stop),
+                    ..Unit::default()
+                },
+            )]
+            .into(),
         };
         let mut hydrated = HydratedGameState::new(&mut state);
         hydrated.move_unit(&0, &Direction::Left);
@@ -297,19 +305,24 @@ mod update_test {
     }
 }
 
-
 #[derive(Debug)]
-struct RelationalOneToMany<'a,OneKey,ManyKey>{
+struct RelationalOneToMany<'a, OneKey, ManyKey> {
     one_to_many: BTreeMap<OneKey, BTreeSet<ManyKey>>,
     original: &'a mut BTreeMap<ManyKey, OneKey>,
 }
 
-impl <'a,OneKey: Ord + Clone,ManyKey: Clone + Ord>From<&'a mut BTreeMap<ManyKey,OneKey>> for RelationalOneToMany<'a,OneKey,ManyKey> {
-    fn from(original: &'a mut BTreeMap<ManyKey,OneKey>) -> Self {
-        let one_to_many = original.iter().fold(BTreeMap::new(), |mut acc, (many_key, one_key)| {
-            acc.entry(one_key.clone()).or_insert_with(BTreeSet::new).insert(many_key.clone());
-            acc
-        });
+impl<'a, OneKey: Ord + Clone, ManyKey: Clone + Ord> From<&'a mut BTreeMap<ManyKey, OneKey>>
+    for RelationalOneToMany<'a, OneKey, ManyKey>
+{
+    fn from(original: &'a mut BTreeMap<ManyKey, OneKey>) -> Self {
+        let one_to_many = original
+            .iter()
+            .fold(BTreeMap::new(), |mut acc, (many_key, one_key)| {
+                acc.entry(one_key.clone())
+                    .or_insert_with(BTreeSet::new)
+                    .insert(many_key.clone());
+                acc
+            });
         RelationalOneToMany {
             one_to_many,
             original,
@@ -317,7 +330,7 @@ impl <'a,OneKey: Ord + Clone,ManyKey: Clone + Ord>From<&'a mut BTreeMap<ManyKey,
     }
 }
 
-impl <'a,OneKey: Ord + Clone,ManyKey: Ord + Clone>RelationalOneToMany<'a,OneKey,ManyKey> {
+impl<'a, OneKey: Ord + Clone, ManyKey: Ord + Clone> RelationalOneToMany<'a, OneKey, ManyKey> {
     fn get_one_to_many(&self) -> &BTreeMap<OneKey, BTreeSet<ManyKey>> {
         &self.one_to_many
     }
@@ -326,7 +339,10 @@ impl <'a,OneKey: Ord + Clone,ManyKey: Ord + Clone>RelationalOneToMany<'a,OneKey,
     }
     fn insert_many(&mut self, one_key: &OneKey, many_key: &ManyKey) {
         self.original.insert(many_key.clone(), one_key.clone());
-        self.one_to_many.entry(one_key.clone()).or_insert_with(BTreeSet::new).insert(many_key.clone());
+        self.one_to_many
+            .entry(one_key.clone())
+            .or_insert_with(BTreeSet::new)
+            .insert(many_key.clone());
     }
     fn remove_many(&mut self, many_key: &ManyKey) {
         if let Some(one_key) = self.original.remove(many_key) {
