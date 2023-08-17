@@ -268,8 +268,29 @@ mod update_test {
             }],
             &mut rng,
         );
-        // update を 30回繰り返す
-        for _ in 0..30 {
+        update(
+            &mut state,
+            &vec![Input::Click {
+                address: Address { x: 5, y: 0 },
+            }],
+            &mut rng,
+        );
+        update(
+            &mut state,
+            &vec![Input::Click {
+                address: Address { x: 0, y: 0 },
+            }],
+            &mut rng,
+        );
+        for _ in 0..20 {
+            update(&mut state, &vec![], &mut rng);
+        }
+        insta::assert_debug_snapshot!(state);
+        for _ in 0..20 {
+            update(&mut state, &vec![], &mut rng);
+        }
+        insta::assert_debug_snapshot!(state);
+        for _ in 0..20 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state);
