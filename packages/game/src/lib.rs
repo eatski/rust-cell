@@ -59,19 +59,27 @@ pub struct GameState {
     pub units: BTreeMap<UnitId, Unit>,
 }
 
-#[derive(Debug)]
-struct HydratedGameState<'a> {
-    map: RelationalOneToMany<'a, UnitId, Address>,
-    units: &'a mut BTreeMap<UnitId, Unit>,
+#[derive(Debug,Default)]
+pub struct HydratedGameState{
+    pub map: RelationalOneToMany<UnitId, Address>,
+    pub units: BTreeMap<UnitId, Unit>,
 }
 
-impl<'a> HydratedGameState<'a> {
-    fn new(state: &'a mut GameState) -> Self {
-        Self {
-            map: (&mut state.cells).into(),
-            units: &mut state.units,
+impl HydratedGameState{
+    fn normarize(&self) -> GameState {
+        GameState {
+            cells: self.map.get_many_to_one().clone(),
+            units: self.units.clone(),
         }
     }
+
+    pub fn optimize(state: GameState) -> Self {
+        Self {
+            map: state.cells.into(),
+            units: state.units,
+        }
+    }
+
     fn move_unit(&mut self, unit_id: &UnitId, direction: &RelativePath) {
         let unit = self.units.get_mut(unit_id).unwrap();
         if unit.order != Some(PlayerOrder::Stop) {
@@ -149,9 +157,9 @@ mod tests {
             cells: [(Address { x: 0, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
             units: [(0, Unit::default()), (1, Unit::default())].into(),
         };
-        let mut hydrated = HydratedGameState::new(&mut state);
+        let mut hydrated = HydratedGameState::optimize(state);
         hydrated.move_unit(&0, &RelativePath { x: 1, y: 0 });
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(hydrated.normarize());
     }
 
     #[test]
@@ -160,9 +168,9 @@ mod tests {
             cells: [(Address { x: 1, y: 0 }, 0), (Address { x: 2, y: 0 }, 0)].into(),
             units: [(0, Unit::default())].into(),
         };
-        let mut hydrated = HydratedGameState::new(&mut state);
+        let mut hydrated = HydratedGameState::optimize(state);
         hydrated.move_unit(&0, &RelativePath { x: -1, y: 0 });
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(hydrated.normarize());
     }
 
     #[test]
@@ -178,9 +186,9 @@ mod tests {
             )]
             .into(),
         };
-        let mut hydrated = HydratedGameState::new(&mut state);
+        let mut hydrated = HydratedGameState::optimize(state);
         hydrated.move_unit(&0, &RelativePath { x: -1, y: 0 });
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(hydrated.normarize());
     }
 
     #[test]
@@ -189,9 +197,9 @@ mod tests {
             cells: [(Address { x: 1, y: 0 }, 0), (Address { x: 2, y: 0 }, 1)].into(),
             units: [(0, Unit::default()), (1, Unit::default())].into(),
         };
-        let mut hydrated = HydratedGameState::new(&mut state);
+        let mut hydrated = HydratedGameState::optimize(state);
         hydrated.merge_near_units(&0);
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(hydrated.normarize());
     }
 }
 
@@ -200,20 +208,19 @@ mod tests {
  * 点はランダムに上下左右に1単位動く
  * inputsがある場合は、入力に応じて点を追加する
  */
-pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
+pub fn update(state: &mut HydratedGameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let units = state.units.clone();
     let mut units_to_iter: Vec<_> = units.iter().collect();
     units_to_iter.shuffle(rng);
-    let mut hydrated = HydratedGameState::new(state);
     for (current_unit_id, _) in units_to_iter.iter() {
         if rng.gen_range(0..32) == 0 {
             let direction = NEXT_PATHES.iter().choose(rng).unwrap();
-            hydrated.move_unit(current_unit_id, direction);
-            hydrated.merge_near_units(current_unit_id);
+            state.move_unit(current_unit_id, direction);
+            state.merge_near_units(current_unit_id);
         }
     }
     if let Some(Input::Click { address }) = inputs.last() {
-        if let Some(unit_id) = hydrated.map.get_many_to_one().get(address).cloned() {
+        if let Some(unit_id) = state.map.get_many_to_one().get(address).cloned() {
             let unit = state.units.get_mut(&unit_id).unwrap();
             unit.order = if Some(PlayerOrder::Stop) == unit.order {
                 None
@@ -221,7 +228,7 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
                 Some(PlayerOrder::Stop)
             }
         } else {
-            hydrated.spawn_unit(address);
+            state.spawn_unit(address);
         }
     }
 }
@@ -239,7 +246,7 @@ mod update_test {
             25, 26, 27, 28, 29, 30, 31, 32,
         ];
         let mut rng: StdRng = SeedableRng::from_seed(seed);
-        let mut state = GameState::default();
+        let mut state = Default::default();
         update(
             &mut state,
             &vec![Input::Click {
@@ -278,28 +285,60 @@ mod update_test {
         for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(state.normarize());
         for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(state.normarize());
         for _ in 0..100000 {
             update(&mut state, &vec![], &mut rng);
         }
-        insta::assert_debug_snapshot!(state);
+        insta::assert_debug_snapshot!(state.normarize());
     }
 }
 
 #[derive(Debug)]
-struct RelationalOneToMany<'a, OneKey, ManyKey> {
+pub struct RelationalOneToMany<OneKey, ManyKey> {
     one_to_many: BTreeMap<OneKey, BTreeSet<ManyKey>>,
-    original: &'a mut BTreeMap<ManyKey, OneKey>,
+    original: BTreeMap<ManyKey, OneKey>,
 }
 
-impl<'a, OneKey: Ord + Clone, ManyKey: Clone + Ord> From<&'a mut BTreeMap<ManyKey, OneKey>>
-    for RelationalOneToMany<'a, OneKey, ManyKey>
+impl <OneKey, ManyKey>Default for RelationalOneToMany<OneKey, ManyKey> {
+    fn default() -> Self {
+        Self {
+            one_to_many: BTreeMap::new(),
+            original: BTreeMap::new(),
+        }
+    }
+}
+
+impl<OneKey: Ord + Clone, ManyKey: Ord + Clone> RelationalOneToMany<OneKey, ManyKey> {
+    pub fn get_one_to_many(&self) -> &BTreeMap<OneKey, BTreeSet<ManyKey>> {
+        &self.one_to_many
+    }
+    pub fn get_many_to_one(&self) -> &BTreeMap<ManyKey, OneKey> {
+        &self.original
+    }
+    pub fn insert_many(&mut self, one_key: &OneKey, many_key: &ManyKey) {
+        self.original.insert(many_key.clone(), one_key.clone());
+        self.one_to_many
+            .entry(one_key.clone())
+            .or_insert_with(BTreeSet::new)
+            .insert(many_key.clone());
+    }
+    pub fn remove_many(&mut self, many_key: &ManyKey) {
+        if let Some(one_key) = self.original.remove(many_key) {
+            if let Some(many_keys) = self.one_to_many.get_mut(&one_key) {
+                many_keys.remove(many_key);
+            }
+        }
+    }
+}
+
+impl<OneKey: Ord + Clone, ManyKey: Clone + Ord> From<BTreeMap<ManyKey, OneKey>>
+    for RelationalOneToMany<OneKey, ManyKey>
 {
-    fn from(original: &'a mut BTreeMap<ManyKey, OneKey>) -> Self {
+    fn from(original: BTreeMap<ManyKey, OneKey>) -> Self {
         let one_to_many = original
             .iter()
             .fold(BTreeMap::new(), |mut acc, (many_key, one_key)| {
@@ -315,29 +354,6 @@ impl<'a, OneKey: Ord + Clone, ManyKey: Clone + Ord> From<&'a mut BTreeMap<ManyKe
     }
 }
 
-impl<'a, OneKey: Ord + Clone, ManyKey: Ord + Clone> RelationalOneToMany<'a, OneKey, ManyKey> {
-    fn get_one_to_many(&self) -> &BTreeMap<OneKey, BTreeSet<ManyKey>> {
-        &self.one_to_many
-    }
-    fn get_many_to_one(&self) -> &BTreeMap<ManyKey, OneKey> {
-        &self.original
-    }
-    fn insert_many(&mut self, one_key: &OneKey, many_key: &ManyKey) {
-        self.original.insert(many_key.clone(), one_key.clone());
-        self.one_to_many
-            .entry(one_key.clone())
-            .or_insert_with(BTreeSet::new)
-            .insert(many_key.clone());
-    }
-    fn remove_many(&mut self, many_key: &ManyKey) {
-        if let Some(one_key) = self.original.remove(many_key) {
-            if let Some(many_keys) = self.one_to_many.get_mut(&one_key) {
-                many_keys.remove(many_key);
-            }
-        }
-    }
-}
-
 #[cfg(test)]
 mod relational_one_to_many_test {
     use super::*;
@@ -348,7 +364,7 @@ mod relational_one_to_many_test {
         original.insert(0, 0);
         original.insert(1, 0);
         original.insert(2, 1);
-        let relational = RelationalOneToMany::from(&mut original);
+        let relational = RelationalOneToMany::from(original);
         insta::assert_debug_snapshot!(relational);
     }
 }
