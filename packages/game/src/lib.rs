@@ -139,6 +139,14 @@ impl<'a> HydratedGameState<'a> {
         }
         self.units.remove(source_unit_id);
     }
+    /**
+     * unitを新しくスポーンさせる
+     */
+    fn spawn_unit(&mut self,address: &Address) {
+        let unit_id = self.units.keys().max().unwrap_or(&0) + 1;
+        self.map.insert_many(&unit_id, address);
+        self.units.insert(unit_id, Unit::default());
+    }
 }
 
 #[cfg(test)]
@@ -212,17 +220,15 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
         }
     }
     if let Some(Input::Click { address }) = inputs.last() {
-        if let Some(unit_id) = state.cells.get(address) {
-            let unit = state.units.get_mut(unit_id).unwrap();
+        if let Some(unit_id) = hydrated.map.get_many_to_one().get(address).cloned() {
+            let unit = state.units.get_mut(&unit_id).unwrap();
             unit.order = if Some(PlayerOrder::Stop) == unit.order {
                 None
             } else {
                 Some(PlayerOrder::Stop)
             }
         } else {
-            let id = state.units.iter().map(|(id, _)| id).max().unwrap_or(&0) + 1;
-            state.cells.insert(*address, id);
-            state.units.insert(id, Unit::default());
+            hydrated.spawn_unit(address);
         }
     }
 }
@@ -235,11 +241,11 @@ mod update_test {
 
     #[test]
     fn update_test() {
-        let seed: [i32; 32] = [
+        let seed: [u8; 32] = [
             1, 8, 13, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
             25, 26, 27, 28, 29, 30, 31, 32,
         ];
-        let mut rng: StdRng = SeedableRng::from_seed([0; 32]);
+        let mut rng: StdRng = SeedableRng::from_seed(seed);
         let mut state = GameState::default();
         update(
             &mut state,
@@ -262,6 +268,10 @@ mod update_test {
             }],
             &mut rng,
         );
+        // update を 30回繰り返す
+        for _ in 0..30 {
+            update(&mut state, &vec![], &mut rng);
+        }
         insta::assert_debug_snapshot!(state);
     }
 }
