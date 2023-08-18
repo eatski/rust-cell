@@ -1,7 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 
 use browser::CanvasView;
-use game::{update, state::HydratedGameState};
+use game::{update, state::GameState};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{console, window, CanvasRenderingContext2d, HtmlCanvasElement};
 
@@ -34,7 +34,7 @@ fn main() -> Result<(), JsValue> {
         .ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
     let context: CanvasRenderingContext2d = context.dyn_into()?;
 
-    let mut state: HydratedGameState = Default::default();
+    let mut state: GameState = Default::default();
 
     let drawer = CanvasView::new(context);
 

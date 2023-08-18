@@ -15,7 +15,7 @@ pub enum Input {
  * 点はランダムに上下左右に1単位動く
  * inputsがある場合は、入力に応じて点を追加する
  */
-pub fn update(state: &mut HydratedGameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
+pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let units = state.units.clone();
     let mut units_to_iter: Vec<_> = units.iter().collect();
     units_to_iter.shuffle(rng);

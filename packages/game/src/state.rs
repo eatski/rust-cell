@@ -62,12 +62,12 @@ pub struct FinalizedGameState {
 }
 
 #[derive(Debug,Default)]
-pub struct HydratedGameState{
+pub struct GameState{
     pub units: BTreeMap<UnitId, (Address,Unit)>,
     pub cells: BTreeMap<Address, UnitId>,
 }
 
-impl HydratedGameState{
+impl GameState{
     pub fn move_unit(&mut self, unit_id: &UnitId, direction: &RelativePath) {
         let (address,unit) = self.units.get_mut(unit_id).unwrap();
         let address_cloned = address.clone();
@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn move_unit() {
-        let mut state = HydratedGameState::default();
+        let mut state = GameState::default();
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 2, y: 0 });
@@ -133,7 +133,7 @@ mod tests {
 
     #[test]
     fn move_unit_2() {
-        let mut state = HydratedGameState::default();
+        let mut state = GameState::default();
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 2, y: 0 });
@@ -143,7 +143,7 @@ mod tests {
 
     #[test]
     fn move_unit_3() {
-        let mut state = HydratedGameState::default();
+        let mut state = GameState::default();
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 1, y: 0 });
