@@ -5,12 +5,6 @@ use rand::{
     Rng,
 };
 
-const NEXT_PATHES: [RelativePath; 4] = [
-    RelativePath { x: 0, y: -1 },
-    RelativePath { x: 0, y: 1 },
-    RelativePath { x: -1, y: 0 },
-    RelativePath { x: 1, y: 0 },
-];
 
 pub enum Input {
     Click { address: Address },
@@ -29,12 +23,11 @@ pub fn update(state: &mut HydratedGameState, inputs: &Vec<Input>, rng: &mut impl
         if rng.gen_range(0..32) == 0 {
             let direction = NEXT_PATHES.iter().choose(rng).unwrap();
             state.move_unit(current_unit_id, direction);
-            state.merge_near_units(current_unit_id);
         }
     }
     if let Some(Input::Click { address }) = inputs.last() {
-        if let Some(unit_id) = state.map.get_many_to_one().get(address).cloned() {
-            let unit = state.units.get_mut(&unit_id).unwrap();
+        if let Some(unit_id) = state.cells.get(address).cloned() {
+            let (_,unit) = state.units.get_mut(&unit_id).unwrap();
             unit.order = if Some(PlayerOrder::Stop) == unit.order {
                 None
             } else {
@@ -51,7 +44,6 @@ mod update_test {
     use super::*;
     use rand::rngs::StdRng;
     use rand::SeedableRng;
-
     #[test]
     fn update_test() {
         let seed: [u8; 32] = [
@@ -98,14 +90,14 @@ mod update_test {
         for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
-        insta::assert_debug_snapshot!(state.normarize());
+        insta::assert_debug_snapshot!(state.finalize());
         for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
-        insta::assert_debug_snapshot!(state.normarize());
+        insta::assert_debug_snapshot!(state.finalize());
         for _ in 0..100000 {
             update(&mut state, &vec![], &mut rng);
         }
-        insta::assert_debug_snapshot!(state.normarize());
+        insta::assert_debug_snapshot!(state.finalize());
     }
 }

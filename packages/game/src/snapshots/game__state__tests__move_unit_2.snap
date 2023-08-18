@@ -1,0 +1,38 @@
+---
+source: src/state.rs
+expression: state.finalize()
+---
+FinalizedGameState {
+    cells: [
+        (
+            Address {
+                x: -1,
+                y: 0,
+            },
+            Unit {
+                order: None,
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 2,
+                y: 0,
+            },
+            Unit {
+                order: None,
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+    ],
+}

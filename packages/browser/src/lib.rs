@@ -15,12 +15,11 @@ impl CanvasView {
     pub fn new(canvas_context: CanvasRenderingContext2d) -> Self {
         Self { canvas_context }
     }
-    pub fn draw(&self, state: &game::state::HydratedGameState) {
+    pub fn draw(&self, state: &game::state::FinalizedGameState) {
         let context = &self.canvas_context;
         context.clear_rect(0.0, 0.0, MAP_PX.into(), MAP_PX.into());
         context.begin_path();
-        for (address, unit_id) in state.map.get_many_to_one().iter() {
-            let unit = state.units.get(unit_id).unwrap();
+        for (address, unit) in state.cells.iter() {
             if unit.order == Some(game::state::PlayerOrder::Stop) {
                 context.set_fill_style(&JsValue::from_str("red"));
             } else {
@@ -58,5 +57,12 @@ impl CanvasView {
             .unwrap();
         closure.forget();
         events
+    }
+}
+
+#[cfg(test)]
+mod test {
+    fn hoge()-> impl FnMut(){
+
     }
 }

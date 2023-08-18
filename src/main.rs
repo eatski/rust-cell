@@ -1,7 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 
 use browser::CanvasView;
-use game::update;
+use game::{update, state::HydratedGameState};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{console, window, CanvasRenderingContext2d, HtmlCanvasElement};
 
@@ -34,7 +34,7 @@ fn main() -> Result<(), JsValue> {
         .ok_or_else(|| JsValue::from_str("The canvas does not have a 2d context"))?;
     let context: CanvasRenderingContext2d = context.dyn_into()?;
 
-    let mut state = Default::default();
+    let mut state: HydratedGameState = Default::default();
 
     let drawer = CanvasView::new(context);
 
@@ -43,7 +43,7 @@ fn main() -> Result<(), JsValue> {
     // pointsをcalc_next_pointsしながら繰り返し描画する
     set_interval_with_request_animation_frame(
         move |events| {
-            drawer.draw(&state);
+            drawer.draw(&state.finalize());
             update(
                 &mut state, 
                 &events,
