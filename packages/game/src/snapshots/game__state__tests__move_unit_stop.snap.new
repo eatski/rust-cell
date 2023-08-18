@@ -1,6 +1,7 @@
 ---
-source: src/lib.rs
-expression: hydrated.original
+source: src/state.rs
+assertion_line: 182
+expression: hydrated.normarize()
 ---
 GameState {
     cells: {

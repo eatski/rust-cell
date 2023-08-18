@@ -1,5 +1,6 @@
 ---
 source: src/state.rs
+assertion_line: 153
 expression: hydrated.normarize()
 ---
 GameState {
@@ -11,10 +12,13 @@ GameState {
         Address {
             x: 2,
             y: 0,
-        }: 0,
+        }: 1,
     },
     units: {
         0: Unit {
+            order: None,
+        },
+        1: Unit {
             order: None,
         },
     },

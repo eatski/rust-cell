@@ -1,6 +1,7 @@
 ---
 source: src/lib.rs
-expression: state
+assertion_line: 109
+expression: state.normarize()
 ---
 GameState {
     cells: {

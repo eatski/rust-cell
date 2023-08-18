@@ -1,5 +1,6 @@
 ---
-source: src/lib.rs
+source: src/state.rs
+assertion_line: 265
 expression: relational
 ---
 RelationalOneToMany {
