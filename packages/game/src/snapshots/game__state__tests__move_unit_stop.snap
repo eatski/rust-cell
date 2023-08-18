@@ -1,0 +1,23 @@
+---
+source: src/state.rs
+expression: hydrated.normarize()
+---
+GameState {
+    cells: {
+        Address {
+            x: 1,
+            y: 0,
+        }: 0,
+        Address {
+            x: 2,
+            y: 0,
+        }: 0,
+    },
+    units: {
+        0: Unit {
+            order: Some(
+                Stop,
+            ),
+        },
+    },
+}
