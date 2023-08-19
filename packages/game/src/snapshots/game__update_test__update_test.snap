@@ -6,13 +6,10 @@ FinalizedGameState {
     cells: [
         (
             Address {
-                x: 0,
+                x: -1,
                 y: 0,
             },
             Unit {
-                order: Some(
-                    Stop,
-                ),
                 pathes: {
                     RelativePath {
                         x: 0,
@@ -23,11 +20,10 @@ FinalizedGameState {
         ),
         (
             Address {
-                x: 0,
-                y: 1,
+                x: 1,
+                y: 2,
             },
             Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,
@@ -38,11 +34,10 @@ FinalizedGameState {
         ),
         (
             Address {
-                x: 2,
+                x: 5,
                 y: 0,
             },
             Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,
@@ -54,10 +49,9 @@ FinalizedGameState {
         (
             Address {
                 x: 6,
-                y: 4,
+                y: 3,
             },
             Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,

@@ -10,7 +10,6 @@ FinalizedGameState {
                 y: 0,
             },
             Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,
@@ -25,7 +24,6 @@ FinalizedGameState {
                 y: 0,
             },
             Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,

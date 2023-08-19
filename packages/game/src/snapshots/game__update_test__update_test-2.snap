@@ -10,24 +10,6 @@ FinalizedGameState {
                 y: 0,
             },
             Unit {
-                order: Some(
-                    Stop,
-                ),
-                pathes: {
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 0,
-                y: 1,
-            },
-            Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,
@@ -39,10 +21,27 @@ FinalizedGameState {
         (
             Address {
                 x: 2,
-                y: -1,
+                y: 1,
             },
             Unit {
-                order: None,
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 5,
+                y: 0,
+            },
+            Unit {
                 pathes: {
                     RelativePath {
                         x: 0,
@@ -54,10 +53,9 @@ FinalizedGameState {
         (
             Address {
                 x: 6,
-                y: 6,
+                y: 3,
             },
             Unit {
-                order: None,
                 pathes: {
                     RelativePath {
                         x: 0,

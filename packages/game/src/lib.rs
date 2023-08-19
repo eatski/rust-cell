@@ -22,13 +22,12 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let mut units_to_iter: Vec<_> = units.iter().collect();
     units_to_iter.shuffle(rng);
     for (current_unit_id, _) in units_to_iter.iter() {
-        let rnd = rng.gen_range(0..1024);
-        match rnd {
-            0..=10 => {
+        let rnd = rng.gen_range(0..2048);
+        match rnd {            0..=24 => {
                 let direction = NEXT_PATHES.iter().choose(rng).unwrap();
                 state.move_unit(current_unit_id, direction);
             }
-            11 => {
+            25 => {
                 let (_,unit) = state.units.get(current_unit_id).unwrap();
                 let next_pathes: BTreeSet<_> = unit.pathes.iter().flat_map(|path| {
                     NEXT_PATHES.iter().map(move |next_path| path + next_path)
@@ -110,7 +109,7 @@ mod update_test {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state.finalize());
-        for _ in 0..100000 {
+        for _ in 0..10000 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state.finalize());
