@@ -1,0 +1,13 @@
+---
+source: src/state.rs
+expression: error
+---
+{
+    (
+        2,
+        RelativePath {
+            x: 0,
+            y: 0,
+        },
+    ),
+}

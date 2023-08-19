@@ -52,9 +52,7 @@ pub struct Unit {
 impl Default for Unit {
     fn default() -> Self {
         Self {
-            pathes: [
-                UNIT_CORE_PATH,
-            ].into(),
+            pathes: [UNIT_CORE_PATH].into(),
         }
     }
 }
@@ -66,37 +64,55 @@ pub struct FinalizedGameState {
     pub cells: Vec<(Address, Unit)>,
 }
 
-#[derive(Debug,Default)]
-pub struct GameState{
-    pub units: BTreeMap<UnitId, (Address,Unit)>,
-    pub cells: BTreeMap<Address, UnitId>,
+#[derive(Debug, Default)]
+pub struct GameState {
+    pub units: BTreeMap<UnitId, (Address, Unit)>,
+    pub cells: BTreeMap<Address, (UnitId, RelativePath)>,
 }
 
-impl GameState{
-
-    pub fn dry_run_move_unit<'a>(&'a mut self, unit_id: &'a UnitId, direction: &'a RelativePath) -> Option<impl FnOnce() + 'a>{
-        let (address,unit) = self.units.get(unit_id).unwrap().clone();
+impl GameState {
+    pub fn dry_run_move_unit<'a>(
+        &'a mut self,
+        unit_id: &'a UnitId,
+        direction: &'a RelativePath,
+    ) -> Result<impl FnOnce() + 'a, BTreeSet<(UnitId, RelativePath)>> {
+        let (address, unit) = self.units.get(unit_id).unwrap().clone();
         let current_pathes = unit.pathes.clone();
-        let current_address:BTreeSet<_>  = current_pathes.into_iter().map(|path| &address + &path).collect();
-        let next_addresses:BTreeSet<_>  = current_address.iter().map(move |address| address + &direction).collect();
+        let current_address: BTreeSet<_> = current_pathes
+            .into_iter()
+            .map(|path| (&address + &path, path))
+            .collect();
+        let next_addresses: BTreeSet<_> = current_address
+            .iter()
+            .map(move |(address, path)| (address + &direction, path.clone()))
+            .collect();
 
-        let is_collision = next_addresses.iter().any(|address| {
-            let next_unit_id = self.cells.get(&address);
-            next_unit_id.map(|id| id != unit_id).unwrap_or(false)
-        });
-        if !is_collision {
-            Some(move || {
-                let (address,_) = self.units.get_mut(&unit_id).unwrap();
-                for address in current_address {
+        let collision_addresses: BTreeSet<_> = next_addresses
+            .iter()
+            .filter_map(|(address, _)| {
+                let next_unit_id = self.cells.get(&address);
+                next_unit_id.and_then(|(next_unit_id, path)| {
+                    if next_unit_id != unit_id {
+                        Some((next_unit_id.clone(), path.clone()))
+                    } else {
+                        None
+                    }
+                })
+            })
+            .collect();
+        if collision_addresses.is_empty() {
+            Ok(move || {
+                let (address, _) = self.units.get_mut(&unit_id).unwrap();
+                for (address, _) in current_address {
                     self.cells.remove(&address);
                 }
-                for address in next_addresses {
-                    self.cells.insert(address, *unit_id);
+                for (address, path) in next_addresses {
+                    self.cells.insert(address, (*unit_id, path.clone()));
                 }
                 *address = &address.clone() + &direction;
             })
-        }else{
-            None
+        } else {
+            Err(collision_addresses)
         }
     }
     /**
@@ -104,34 +120,51 @@ impl GameState{
      */
     pub fn spawn_unit(&mut self, address: &Address) {
         let unit_id = self.units.keys().max().unwrap_or(&0) + 1;
-        self.cells.insert(*address, unit_id);
-        self.units.insert(unit_id, (*address,Unit::default()));
+        self.cells.insert(*address, (unit_id, UNIT_CORE_PATH));
+        self.units.insert(unit_id, (*address, Unit::default()));
     }
-    
+
     /**
      * unitのpathを追加する
      */
-    pub fn dry_run_add_path<'a>(&'a mut self, unit_id: &UnitId, path: &RelativePath) -> Option<impl FnOnce() + 'a>{
-  
+    pub fn dry_run_add_path<'a>(
+        &'a mut self,
+        unit_id: &UnitId,
+        path: &RelativePath,
+    ) -> Option<impl FnOnce() + 'a> {
         let new_address = {
-            let (address,_) = self.units.get(unit_id).unwrap();
+            let (address, _) = self.units.get(unit_id).unwrap();
             &address.clone() + path
         };
         let new_address_cloned = new_address.clone();
         if self.cells.contains_key(&new_address) {
-            return None
+            return None;
         }
         let path = path.clone();
         let unit_id = unit_id.clone();
         Some(move || {
-            let (_,unit) = self.units.get_mut(&unit_id).unwrap();
+            let (_, unit) = self.units.get_mut(&unit_id).unwrap();
             unit.pathes.insert(path.clone());
-            self.cells.insert(new_address_cloned, unit_id);
+            self.cells.insert(new_address_cloned, (unit_id, path));
         })
     }
 
+    /**
+     * unitを削除する
+     */
+    pub fn remove_unit(&mut self, unit_id: &UnitId) {
+        let (address, unit) = self.units.remove(unit_id).unwrap();
+        for path in unit.pathes {
+            self.cells.remove(&(&address + &path));
+        }
+    }
+
     pub fn finalize(&self) -> FinalizedGameState {
-        let cells = self.units.iter().map(|(_, (address, unit))| (address.clone(), unit.clone())).collect();
+        let cells = self
+            .units
+            .iter()
+            .map(|(_, (address, unit))| (address.clone(), unit.clone()))
+            .collect();
         FinalizedGameState { cells }
     }
 }
@@ -146,7 +179,9 @@ mod tests {
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 2, y: 0 });
-        state.dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 }).unwrap()();
+        state
+            .dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 })
+            .unwrap()();
         insta::assert_debug_snapshot!(state.finalize());
     }
 
@@ -156,7 +191,9 @@ mod tests {
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 2, y: 0 });
-        state.dry_run_move_unit(&unit_id, &RelativePath { x: -1, y: 0 }).unwrap()();
+        state
+            .dry_run_move_unit(&unit_id, &RelativePath { x: -1, y: 0 })
+            .unwrap()();
         insta::assert_debug_snapshot!(state.finalize());
     }
 
@@ -166,7 +203,10 @@ mod tests {
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 1, y: 0 });
-        assert!(state.dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 }).is_none());
+        let error = state
+            .dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 })
+            .map(|_| ())
+            .unwrap_err();
+        insta::assert_debug_snapshot!(error);
     }
-
 }
