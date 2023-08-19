@@ -26,7 +26,7 @@ impl CanvasView {
                 if path == &UNIT_CORE_PATH {
                     context.set_fill_style(&JsValue::from_str("red"));
                 } else {
-                    context.set_fill_style(&JsValue::from_str("blue"));
+                    context.set_fill_style(&JsValue::from_str("pink"));
                 }
                 context.fill_rect(
                     address.x as f64 * CELL_SIZE,
