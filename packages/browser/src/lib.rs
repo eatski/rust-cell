@@ -1,5 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
+use game::state::UNIT_CORE_PATH;
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::CanvasRenderingContext2d;
 
@@ -22,7 +23,11 @@ impl CanvasView {
         for (address, unit) in state.cells.iter() {
             for path in unit.pathes.iter() {
                 let address = address + path;
-                context.set_fill_style(&JsValue::from_str("black"));
+                if path == &UNIT_CORE_PATH {
+                    context.set_fill_style(&JsValue::from_str("red"));
+                } else {
+                    context.set_fill_style(&JsValue::from_str("blue"));
+                }
                 context.fill_rect(
                     address.x as f64 * CELL_SIZE,
                     address.y as f64 * CELL_SIZE,
