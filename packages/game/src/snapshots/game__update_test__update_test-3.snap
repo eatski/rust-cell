@@ -6,18 +6,18 @@ FinalizedGameState {
     cells: [
         (
             Address {
-                x: 7,
-                y: -3,
+                x: 13,
+                y: 79,
             },
             Unit {
                 pathes: {
                     RelativePath {
-                        x: 0,
-                        y: -2,
+                        x: -1,
+                        y: 1,
                     },
                     RelativePath {
-                        x: 0,
-                        y: -1,
+                        x: -1,
+                        y: 2,
                     },
                     RelativePath {
                         x: 0,
@@ -29,11 +29,15 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 1,
-                        y: -1,
+                        y: 0,
                     },
                     RelativePath {
                         x: 1,
-                        y: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
                     },
                     RelativePath {
                         x: 2,
@@ -48,22 +52,26 @@ FinalizedGameState {
         ),
         (
             Address {
-                x: 9,
-                y: 18,
+                x: 29,
+                y: 41,
             },
             Unit {
                 pathes: {
                     RelativePath {
                         x: -2,
-                        y: -2,
+                        y: 0,
                     },
                     RelativePath {
                         x: -1,
-                        y: -2,
+                        y: 0,
                     },
                     RelativePath {
                         x: -1,
-                        y: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
                     },
                     RelativePath {
                         x: 0,
@@ -79,6 +87,40 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 89,
+                y: 4,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
                         y: 1,
                     },
                     RelativePath {
@@ -90,15 +132,395 @@ FinalizedGameState {
         ),
         (
             Address {
-                x: -3,
+                x: 62,
+                y: 14,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 40,
+                y: 66,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -2,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 11,
+                y: 38,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 28,
+                y: 82,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 88,
                 y: -7,
             },
             Unit {
                 pathes: {
                     RelativePath {
+                        x: -3,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 19,
+                y: 55,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 3,
+                        y: -1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 53,
+                y: 20,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 88,
+                y: 11,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
                         x: 0,
                         y: -2,
                     },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 43,
+                y: 41,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: -2,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 76,
+                y: 31,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 3,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 42,
+                y: 12,
+            },
+            Unit {
+                pathes: {
                     RelativePath {
                         x: 0,
                         y: -1,
@@ -121,6 +543,44 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 2,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 3,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: 3,
+                        y: -1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 43,
+                y: 24,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
                         y: 0,
                     },
                 },
@@ -128,8 +588,128 @@ FinalizedGameState {
         ),
         (
             Address {
-                x: 3,
-                y: 5,
+                x: 81,
+                y: 57,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 63,
+                y: 51,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 19,
+                y: 96,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 12,
+                y: 86,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 83,
+                y: 43,
             },
             Unit {
                 pathes: {
@@ -141,8 +721,412 @@ FinalizedGameState {
                         x: 0,
                         y: 1,
                     },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 13,
+                y: 44,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
                     RelativePath {
                         x: 1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: -1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 12,
+                y: 98,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 77,
+                y: 114,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 98,
+                y: 38,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 32,
+                y: 76,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 4,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 99,
+                y: 28,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 47,
+                y: 51,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 0,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 76,
+                y: 87,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 12,
+                y: 90,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                },
+            },
+        ),
+        (
+            Address {
+                x: 63,
+                y: 33,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -3,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
                         y: 0,
                     },
                 },

@@ -69,41 +69,18 @@ mod update_test {
         ];
         let mut rng: StdRng = SeedableRng::from_seed(seed);
         let mut state = Default::default();
-        update(
-            &mut state,
-            &vec![Input::Click {
-                address: Address { x: 0, y: 0 },
-            }],
-            &mut rng,
-        );
-        update(
-            &mut state,
-            &vec![Input::Click {
-                address: Address { x: 1, y: 2 },
-            }],
-            &mut rng,
-        );
-        update(
-            &mut state,
-            &vec![Input::Click {
-                address: Address { x: 0, y: 0 },
-            }],
-            &mut rng,
-        );
-        update(
-            &mut state,
-            &vec![Input::Click {
-                address: Address { x: 5, y: 0 },
-            }],
-            &mut rng,
-        );
-        update(
-            &mut state,
-            &vec![Input::Click {
-                address: Address { x: 5, y: 4 },
-            }],
-            &mut rng,
-        );
+
+        for _ in 0..30 {
+            let address = Address {
+                x: rng.gen_range(0..100),
+                y: rng.gen_range(0..100),
+            };
+            update(
+                &mut state,
+                &vec![Input::Click { address }],
+                &mut rng,
+            );
+        }
         for _ in 0..50 {
             update(&mut state, &vec![], &mut rng);
         }
