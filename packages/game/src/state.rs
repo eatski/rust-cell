@@ -73,25 +73,30 @@ pub struct GameState{
 }
 
 impl GameState{
-    pub fn move_unit(&mut self, unit_id: &UnitId, direction: &RelativePath) {
-        let (address,unit) = self.units.get_mut(unit_id).unwrap();
-        let address_cloned = address.clone();
-        let current_pathes = &unit.pathes;
-        let current_address = current_pathes.iter().map(|path| &address_cloned + path);
-        let next_addresses = current_address.clone().map(|address| &address + direction);
 
-        let is_collision = next_addresses.clone().any(|address| {
+    pub fn dry_run_move_unit<'a>(&'a mut self, unit_id: &'a UnitId, direction: &'a RelativePath) -> Option<impl FnOnce() + 'a>{
+        let (address,unit) = self.units.get(unit_id).unwrap().clone();
+        let current_pathes = unit.pathes.clone();
+        let current_address:BTreeSet<_>  = current_pathes.into_iter().map(|path| &address + &path).collect();
+        let next_addresses:BTreeSet<_>  = current_address.iter().map(move |address| address + &direction).collect();
+
+        let is_collision = next_addresses.iter().any(|address| {
             let next_unit_id = self.cells.get(&address);
             next_unit_id.map(|id| id != unit_id).unwrap_or(false)
         });
         if !is_collision {
-            for address in current_address {
-                self.cells.remove(&address);
-            }
-            for address in next_addresses {
-                self.cells.insert(address, *unit_id);
-            }
-            *address = &address_cloned + direction;
+            Some(move || {
+                let (address,_) = self.units.get_mut(&unit_id).unwrap();
+                for address in current_address {
+                    self.cells.remove(&address);
+                }
+                for address in next_addresses {
+                    self.cells.insert(address, *unit_id);
+                }
+                *address = &address.clone() + &direction;
+            })
+        }else{
+            None
         }
     }
     /**
@@ -141,7 +146,7 @@ mod tests {
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 2, y: 0 });
-        state.move_unit(&unit_id, &RelativePath { x: 1, y: 0 });
+        state.dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 }).unwrap()();
         insta::assert_debug_snapshot!(state.finalize());
     }
 
@@ -151,7 +156,7 @@ mod tests {
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 2, y: 0 });
-        state.move_unit(&unit_id, &RelativePath { x: -1, y: 0 });
+        state.dry_run_move_unit(&unit_id, &RelativePath { x: -1, y: 0 }).unwrap()();
         insta::assert_debug_snapshot!(state.finalize());
     }
 
@@ -161,8 +166,7 @@ mod tests {
         state.spawn_unit(&Address { x: 0, y: 0 });
         let unit_id = state.units.first_key_value().unwrap().0.clone();
         state.spawn_unit(&Address { x: 1, y: 0 });
-        state.move_unit(&unit_id, &RelativePath { x: 1, y: 0 });
-        insta::assert_debug_snapshot!(state.finalize());
+        assert!(state.dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 }).is_none());
     }
 
 }

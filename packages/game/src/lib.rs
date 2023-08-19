@@ -25,7 +25,10 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
         let rnd = rng.gen_range(0..2048);
         match rnd {            0..=24 => {
                 let direction = NEXT_PATHES.iter().choose(rng).unwrap();
-                state.move_unit(current_unit_id, direction);
+                let mv = state.dry_run_move_unit(current_unit_id, direction);
+                if let Some(exec) = mv {
+                    exec();
+                }
             }
             25 => {
                 let (_,unit) = state.units.get(current_unit_id).unwrap();
