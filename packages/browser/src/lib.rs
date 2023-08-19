@@ -35,12 +35,8 @@ impl CanvasView {
                     CELL_SIZE,
                 );
             }
-            
-            
         }
         context.fill();
-
-        
     }
     pub fn init_input_receiver(&self) -> Rc<RefCell<Vec<game::Input>>> {
         let canvas = self.canvas_context.canvas().unwrap();

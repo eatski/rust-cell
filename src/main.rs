@@ -1,7 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 
 use browser::CanvasView;
-use game::{update, state::GameState};
+use game::{state::GameState, update};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{console, window, CanvasRenderingContext2d, HtmlCanvasElement};
 
@@ -44,11 +44,7 @@ fn main() -> Result<(), JsValue> {
     set_interval_with_request_animation_frame(
         move |events| {
             drawer.draw(&state.finalize());
-            update(
-                &mut state, 
-                &events,
-                &mut rng,
-            );
+            update(&mut state, &events, &mut rng);
         },
         events,
     );
