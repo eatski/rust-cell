@@ -1,4 +1,6 @@
 pub mod state;
+use std::collections::BTreeSet;
+
 use state::*;
 use rand::{
     seq::{IteratorRandom, SliceRandom},
@@ -20,19 +22,32 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let mut units_to_iter: Vec<_> = units.iter().collect();
     units_to_iter.shuffle(rng);
     for (current_unit_id, _) in units_to_iter.iter() {
-        if rng.gen_range(0..32) == 0 {
-            let direction = NEXT_PATHES.iter().choose(rng).unwrap();
-            state.move_unit(current_unit_id, direction);
+        let rnd = rng.gen_range(0..1024);
+        match rnd {
+            0..=10 => {
+                let direction = NEXT_PATHES.iter().choose(rng).unwrap();
+                state.move_unit(current_unit_id, direction);
+            }
+            11 => {
+                let (_,unit) = state.units.get(current_unit_id).unwrap();
+                let next_pathes: BTreeSet<_> = unit.pathes.iter().flat_map(|path| {
+                    NEXT_PATHES.iter().map(move |next_path| path + next_path)
+                }).collect();
+                let mut next_pathes: Vec<_> = next_pathes.into_iter().collect();
+                next_pathes.shuffle(rng);
+
+                for path in next_pathes.iter() {
+                    if let Some(exec) = state.dry_run_add_path(current_unit_id, path) {
+                        exec();
+                        break;
+                    }
+                }
+            }
+            _ => {}
         }
     }
     if let Some(Input::Click { address }) = inputs.last() {
-        if let Some(unit_id) = state.cells.get(address).cloned() {
-            let (_,unit) = state.units.get_mut(&unit_id).unwrap();
-            unit.order = if Some(PlayerOrder::Stop) == unit.order {
-                None
-            } else {
-                Some(PlayerOrder::Stop)
-            }
+        if let Some(_) = state.cells.get(address).cloned() {
         } else {
             state.spawn_unit(address);
         }

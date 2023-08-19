@@ -20,17 +20,17 @@ impl CanvasView {
         context.clear_rect(0.0, 0.0, MAP_PX.into(), MAP_PX.into());
         context.begin_path();
         for (address, unit) in state.cells.iter() {
-            if unit.order == Some(game::state::PlayerOrder::Stop) {
-                context.set_fill_style(&JsValue::from_str("red"));
-            } else {
+            for path in unit.pathes.iter() {
+                let address = address + path;
                 context.set_fill_style(&JsValue::from_str("black"));
+                context.fill_rect(
+                    address.x as f64 * CELL_SIZE,
+                    address.y as f64 * CELL_SIZE,
+                    CELL_SIZE,
+                    CELL_SIZE,
+                );
             }
-            context.fill_rect(
-                address.x as f64 * CELL_SIZE,
-                address.y as f64 * CELL_SIZE,
-                CELL_SIZE,
-                CELL_SIZE,
-            );
+            
             
         }
         context.fill();
@@ -57,12 +57,5 @@ impl CanvasView {
             .unwrap();
         closure.forget();
         events
-    }
-}
-
-#[cfg(test)]
-mod test {
-    fn hoge()-> impl FnMut(){
-
     }
 }

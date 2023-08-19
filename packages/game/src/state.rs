@@ -15,12 +15,24 @@ pub struct RelativePath {
     pub y: isize,
 }
 
+impl Add<&RelativePath> for &RelativePath {
+    type Output = RelativePath;
+    fn add(self, rhs: &RelativePath) -> Self::Output {
+        RelativePath {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
 pub const NEXT_PATHES: [RelativePath; 4] = [
     RelativePath { x: 0, y: -1 },
     RelativePath { x: 0, y: 1 },
     RelativePath { x: -1, y: 0 },
     RelativePath { x: 1, y: 0 },
 ];
+
+pub const UNIT_CORE_PATH: RelativePath = RelativePath { x: 0, y: 0 };
 
 impl Add<&RelativePath> for &Address {
     type Output = Address;
@@ -34,24 +46,17 @@ impl Add<&RelativePath> for &Address {
 
 #[derive(Debug, Clone)]
 pub struct Unit {
-    pub order: Option<PlayerOrder>,
     pub pathes: BTreeSet<RelativePath>,
 }
 
 impl Default for Unit {
     fn default() -> Self {
         Self {
-            order: None,
             pathes: [
-                RelativePath { x: 0, y: 0 },
+                UNIT_CORE_PATH,
             ].into(),
         }
     }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum PlayerOrder {
-    Stop,
 }
 
 pub type UnitId = usize;
@@ -71,24 +76,22 @@ impl GameState{
     pub fn move_unit(&mut self, unit_id: &UnitId, direction: &RelativePath) {
         let (address,unit) = self.units.get_mut(unit_id).unwrap();
         let address_cloned = address.clone();
-        if unit.order != Some(PlayerOrder::Stop) {
-            let current_pathes = &unit.pathes;
-            let current_address = current_pathes.iter().map(|path| &address_cloned + path);
-            let next_addresses = current_address.clone().map(|address| &address + direction);
+        let current_pathes = &unit.pathes;
+        let current_address = current_pathes.iter().map(|path| &address_cloned + path);
+        let next_addresses = current_address.clone().map(|address| &address + direction);
 
-            let is_collision = next_addresses.clone().any(|address| {
-                let next_unit_id = self.cells.get(&address);
-                next_unit_id.map(|id| id != unit_id).unwrap_or(false)
-            });
-            if !is_collision {
-                for address in current_address {
-                    self.cells.remove(&address);
-                }
-                for address in next_addresses {
-                    self.cells.insert(address, *unit_id);
-                }
-                *address = &address_cloned + direction;
+        let is_collision = next_addresses.clone().any(|address| {
+            let next_unit_id = self.cells.get(&address);
+            next_unit_id.map(|id| id != unit_id).unwrap_or(false)
+        });
+        if !is_collision {
+            for address in current_address {
+                self.cells.remove(&address);
             }
+            for address in next_addresses {
+                self.cells.insert(address, *unit_id);
+            }
+            *address = &address_cloned + direction;
         }
     }
     /**
@@ -103,12 +106,23 @@ impl GameState{
     /**
      * unitのpathを追加する
      */
-    pub fn add_path(&mut self, unit_id: &UnitId, path: &RelativePath) {
-        let (address,unit) = self.units.get_mut(unit_id).unwrap();
-        if unit.order != Some(PlayerOrder::Stop) {
-            unit.pathes.insert(path.clone());
-            self.cells.insert(*address, *unit_id);
+    pub fn dry_run_add_path<'a>(&'a mut self, unit_id: &UnitId, path: &RelativePath) -> Option<impl FnOnce() + 'a>{
+  
+        let new_address = {
+            let (address,_) = self.units.get(unit_id).unwrap();
+            &address.clone() + path
+        };
+        let new_address_cloned = new_address.clone();
+        if self.cells.contains_key(&new_address) {
+            return None
         }
+        let path = path.clone();
+        let unit_id = unit_id.clone();
+        Some(move || {
+            let (_,unit) = self.units.get_mut(&unit_id).unwrap();
+            unit.pathes.insert(path.clone());
+            self.cells.insert(new_address_cloned, unit_id);
+        })
     }
 
     pub fn finalize(&self) -> FinalizedGameState {
