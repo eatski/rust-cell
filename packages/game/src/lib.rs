@@ -79,12 +79,21 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
                     .iter()
                     .flat_map(|path| NEXT_PATHES.iter().map(move |next_path| path + next_path))
                     .collect();
-                let mut next_pathes: Vec<_> = next_pathes.into_iter().collect();
+                let  (mut next_pathes_in_blueprint,mut next_pathes): (Vec<_>,Vec<_>) = 
+                    next_pathes.into_iter().partition(|path| unit.blueprint.contains(path));
+                next_pathes_in_blueprint.shuffle(rng);
                 next_pathes.shuffle(rng);
-
-                for path in next_pathes.iter() {
-                    if let Some(exec) = state.dry_run_add_path(current_unit_id, path) {
-                        exec();
+                for path in next_pathes_in_blueprint.into_iter().chain(next_pathes.into_iter()) {
+                    let executed = state
+                        .dry_run_add_path(current_unit_id, &path)
+                        .map(|exec| {
+                            exec();
+                        })
+                        .map(|()| {
+                            let (_,unit) = state.units.get_mut(current_unit_id).unwrap();
+                            unit.blueprint.remove(&path);
+                        });
+                    if executed.is_some() {
                         break;
                     }
                 }
