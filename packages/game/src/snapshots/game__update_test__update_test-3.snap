@@ -6,11 +6,86 @@ FinalizedGameState {
     cells: [
         (
             Address {
-                x: 26,
-                y: 51,
+                x: 22,
+                y: 82,
             },
             Unit {
                 pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -4,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -4,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 2,
+                y: 64,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
                     RelativePath {
                         x: -1,
                         y: -1,
@@ -24,58 +99,8 @@ FinalizedGameState {
                         y: 1,
                     },
                     RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 4,
-                        y: 0,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 11,
-                y: 46,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -2,
-                        y: -2,
-                    },
-                    RelativePath {
                         x: -1,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -3,
+                        y: 2,
                     },
                     RelativePath {
                         x: 0,
@@ -83,167 +108,80 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
                         y: -1,
                     },
                     RelativePath {
-                        x: 0,
+                        x: 1,
                         y: 0,
                     },
                     RelativePath {
                         x: 1,
-                        y: -2,
+                        y: 1,
                     },
                     RelativePath {
                         x: 1,
-                        y: 0,
+                        y: 2,
                     },
                     RelativePath {
                         x: 2,
                         y: 0,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 73,
+                x: 0,
                 y: 41,
             },
             Unit {
                 pathes: {
                     RelativePath {
                         x: -2,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 40,
-                y: -10,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 107,
-                y: 46,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -4,
-                    },
-                    RelativePath {
-                        x: 1,
                         y: -3,
                     },
                     RelativePath {
+                        x: -1,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -3,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
                         x: 1,
                         y: -2,
                     },
@@ -252,16 +190,21 @@ FinalizedGameState {
                         y: -1,
                     },
                     RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
                         x: 2,
-                        y: -2,
+                        y: -1,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 78,
-                y: 49,
+                x: 73,
+                y: 43,
             },
             Unit {
                 pathes: {
@@ -271,8 +214,59 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
                         y: -1,
                     },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: -1,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 56,
+                y: 12,
+            },
+            Unit {
+                pathes: {
                     RelativePath {
                         x: -2,
                         y: 0,
@@ -297,21 +291,69 @@ FinalizedGameState {
                         x: 0,
                         y: 2,
                     },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 79,
+                y: 32,
+            },
+            Unit {
+                pathes: {
                     RelativePath {
-                        x: 1,
+                        x: -3,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -3,
                         y: 0,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
                     },
                     RelativePath {
                         x: 1,
                         y: 1,
                     },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 19,
-                y: 91,
+                x: 66,
+                y: 37,
             },
             Unit {
                 pathes: {
@@ -320,12 +362,43 @@ FinalizedGameState {
                         y: -1,
                     },
                     RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
                         x: -1,
                         y: -1,
                     },
                     RelativePath {
                         x: -1,
-                        y: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 16,
+                y: 69,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
                     },
                     RelativePath {
                         x: 0,
@@ -344,12 +417,8 @@ FinalizedGameState {
                         y: 1,
                     },
                     RelativePath {
-                        x: 1,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -1,
+                        x: 0,
+                        y: 2,
                     },
                     RelativePath {
                         x: 1,
@@ -361,29 +430,22 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 2,
-                        y: -2,
+                        y: 1,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 67,
-                y: 18,
+                x: 60,
+                y: 16,
             },
             Unit {
                 pathes: {
                     RelativePath {
                         x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
                         y: 1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 2,
                     },
                     RelativePath {
                         x: 0,
@@ -403,7 +465,46 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 1,
-                        y: -4,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 94,
+                y: 4,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
                     },
                     RelativePath {
                         x: 1,
@@ -412,6 +513,155 @@ FinalizedGameState {
                     RelativePath {
                         x: 1,
                         y: -2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 7,
+                y: 53,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 89,
+                y: 25,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 3,
+                        y: 0,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: -10,
+                y: 84,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
                     },
                     RelativePath {
                         x: 1,
@@ -426,26 +676,164 @@ FinalizedGameState {
                         y: 1,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 79,
+                x: 66,
+                y: 20,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 1,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 104,
+                y: 79,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 3,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 82,
+                y: 71,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 3,
+                        y: 2,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 83,
                 y: 9,
             },
             Unit {
                 pathes: {
                     RelativePath {
                         x: -2,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -2,
                         y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: -2,
                     },
                     RelativePath {
                         x: -1,
@@ -457,6 +845,10 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
                         y: 0,
                     },
                     RelativePath {
@@ -464,62 +856,29 @@ FinalizedGameState {
                         y: 1,
                     },
                     RelativePath {
-                        x: 0,
-                        y: 2,
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 1,
                     },
                     RelativePath {
                         x: 1,
                         y: 2,
                     },
                     RelativePath {
-                        x: 1,
-                        y: 3,
+                        x: 2,
+                        y: 1,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: -15,
-                y: 68,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 74,
-                y: 46,
+                x: 25,
+                y: -7,
             },
             Unit {
                 pathes: {
@@ -529,23 +888,19 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: -1,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
                         y: -3,
                     },
                     RelativePath {
-                        x: 0,
+                        x: -1,
                         y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
                     },
                     RelativePath {
                         x: 0,
@@ -560,340 +915,95 @@ FinalizedGameState {
                         y: 1,
                     },
                     RelativePath {
-                        x: 0,
-                        y: 2,
-                    },
-                    RelativePath {
                         x: 1,
                         y: 0,
                     },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: -3,
-                y: 78,
+                x: 48,
+                y: 1,
             },
             Unit {
                 pathes: {
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
                     RelativePath {
                         x: 0,
                         y: 0,
                     },
                     RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
                         x: 1,
                         y: 0,
                     },
                     RelativePath {
-                        x: 1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: -1,
-                    },
-                    RelativePath {
                         x: 2,
                         y: 0,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 4,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 5,
-                        y: -2,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 82,
-                y: 22,
+                x: 6,
+                y: 94,
             },
             Unit {
                 pathes: {
                     RelativePath {
-                        x: -2,
-                        y: 1,
+                        x: -3,
+                        y: -1,
                     },
                     RelativePath {
                         x: -2,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 98,
-                y: 58,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
                         y: -2,
                     },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 3,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 4,
-                        y: 0,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 37,
-                y: -3,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 21,
-                y: 96,
-            },
-            Unit {
-                pathes: {
                     RelativePath {
                         x: -2,
                         y: -1,
                     },
                     RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: 1,
+                        x: -1,
+                        y: -1,
                     },
                     RelativePath {
                         x: -1,
                         y: 0,
                     },
                     RelativePath {
-                        x: -1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
                         x: 0,
                         y: 0,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: -1,
                     },
                 },
-            },
-        ),
-        (
-            Address {
-                x: 60,
-                y: 65,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 1,
-                    },
-                },
+                blueprint: {},
             },
         ),
         (
             Address {
                 x: 55,
-                y: 41,
+                y: 89,
             },
             Unit {
                 pathes: {
@@ -902,16 +1012,28 @@ FinalizedGameState {
                         y: 0,
                     },
                     RelativePath {
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
                         x: -1,
                         y: 0,
                     },
                     RelativePath {
-                        x: 0,
-                        y: 0,
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
                     },
                     RelativePath {
                         x: 0,
-                        y: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
                     },
                     RelativePath {
                         x: 1,
@@ -921,41 +1043,57 @@ FinalizedGameState {
                         x: 1,
                         y: 0,
                     },
-                    RelativePath {
-                        x: 1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 2,
-                    },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 67,
-                y: 58,
+                x: 53,
+                y: 34,
             },
             Unit {
                 pathes: {
                     RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 3,
+                        y: 0,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 52,
+                y: 53,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
                         x: -1,
                         y: -1,
                     },
@@ -964,8 +1102,55 @@ FinalizedGameState {
                         y: 0,
                     },
                     RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
                         x: 0,
-                        y: -2,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 35,
+                y: 78,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 2,
                     },
                     RelativePath {
                         x: 0,
@@ -980,6 +1165,10 @@ FinalizedGameState {
                         y: 1,
                     },
                     RelativePath {
+                        x: 0,
+                        y: 2,
+                    },
+                    RelativePath {
                         x: 1,
                         y: -1,
                     },
@@ -987,93 +1176,87 @@ FinalizedGameState {
                         x: 1,
                         y: 0,
                     },
+                    RelativePath {
+                        x: 1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: 1,
+                        y: 3,
+                    },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 41,
-                y: 73,
+                x: 0,
+                y: 93,
+            },
+            Unit {
+                pathes: {
+                    RelativePath {
+                        x: -2,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 0,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 1,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                blueprint: {},
+            },
+        ),
+        (
+            Address {
+                x: 16,
+                y: 28,
             },
             Unit {
                 pathes: {
                     RelativePath {
                         x: -3,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: 1,
                         y: -1,
                     },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 1,
-                    },
-                },
-            },
-        ),
-        (
-            Address {
-                x: 17,
-                y: 100,
-            },
-            Unit {
-                pathes: {
                     RelativePath {
                         x: -3,
-                        y: 0,
+                        y: 3,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -1,
                     },
                     RelativePath {
                         x: -2,
                         y: 0,
                     },
                     RelativePath {
-                        x: -1,
-                        y: -2,
+                        x: -2,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: 3,
                     },
                     RelativePath {
                         x: -1,
@@ -1088,6 +1271,14 @@ FinalizedGameState {
                         y: 1,
                     },
                     RelativePath {
+                        x: -1,
+                        y: 2,
+                    },
+                    RelativePath {
+                        x: -1,
+                        y: 3,
+                    },
+                    RelativePath {
                         x: 0,
                         y: -1,
                     },
@@ -1096,34 +1287,31 @@ FinalizedGameState {
                         y: 0,
                     },
                     RelativePath {
-                        x: 1,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 0,
+                        x: 0,
+                        y: 1,
                     },
                 },
+                blueprint: {},
             },
         ),
         (
             Address {
-                x: 15,
-                y: 13,
+                x: 84,
+                y: 54,
             },
             Unit {
                 pathes: {
                     RelativePath {
                         x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
                         y: -3,
                     },
                     RelativePath {
-                        x: -1,
+                        x: -2,
                         y: -2,
+                    },
+                    RelativePath {
+                        x: -2,
+                        y: -1,
                     },
                     RelativePath {
                         x: -1,
@@ -1135,7 +1323,19 @@ FinalizedGameState {
                     },
                     RelativePath {
                         x: 0,
+                        y: -2,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: -1,
+                    },
+                    RelativePath {
+                        x: 0,
                         y: 0,
+                    },
+                    RelativePath {
+                        x: 0,
+                        y: 1,
                     },
                     RelativePath {
                         x: 1,
@@ -1146,68 +1346,7 @@ FinalizedGameState {
                         y: 0,
                     },
                 },
-            },
-        ),
-        (
-            Address {
-                x: 28,
-                y: 10,
-            },
-            Unit {
-                pathes: {
-                    RelativePath {
-                        x: -3,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: -2,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: -2,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: -1,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: -1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 0,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 0,
-                        y: 2,
-                    },
-                    RelativePath {
-                        x: 1,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 2,
-                        y: 1,
-                    },
-                    RelativePath {
-                        x: 3,
-                        y: 1,
-                    },
-                },
+                blueprint: {},
             },
         ),
     ],

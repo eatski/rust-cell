@@ -47,12 +47,14 @@ impl Add<&RelativePath> for &Address {
 #[derive(Debug, Clone)]
 pub struct Unit {
     pub pathes: BTreeSet<RelativePath>,
+    pub blueprint: BTreeSet<RelativePath>,
 }
 
 impl Default for Unit {
     fn default() -> Self {
         Self {
             pathes: [UNIT_CORE_PATH].into(),
+            blueprint: Default::default(),
         }
     }
 }

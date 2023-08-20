@@ -11,6 +11,15 @@ pub enum Input {
     Click { address: Address },
 }
 
+
+
+fn calc_similarity<T: Ord>(a: &BTreeSet<T>, b: &BTreeSet<T>) -> (usize,usize) {
+    let a_len = a.len();
+    let b_len = b.len();
+    let similarity = a.intersection(b).count();
+    (similarity * 2,a_len+b_len)
+}
+
 /**
  * 次の点を計算する
  * 点はランダムに上下左右に1単位動く
@@ -38,11 +47,28 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
                         .into_iter()
                         .partition(|(_, path)| path == &UNIT_CORE_PATH);
                     if others.is_empty() {
-                        // coresのみ衝突している場合は、衝突したunitを消す
-                        for (id, _) in cores {
-                            state.remove_unit(&id);
+                        let is_any_unit_is_similar = cores
+                            .iter()
+                            .any(|(unit_id, _)| {
+                                let (_, target) = state.units.get(unit_id).unwrap();
+                                let (_, current) = state.units.get(current_unit_id).unwrap();
+                                fn get_pathes_and_blueprint(unit: &Unit) -> BTreeSet<&RelativePath> {
+                                    unit.pathes
+                                        .iter()
+                                        .chain(unit.blueprint.iter())
+                                        .collect()
+                                }
+
+                                let (simularity,denominator) = calc_similarity(&get_pathes_and_blueprint(target), &get_pathes_and_blueprint(current));
+                                simularity >  rng.gen_range(0..denominator) + 1
+                            });
+                        if !is_any_unit_is_similar {
+                            // coresのみ衝突している場合は、衝突したunitを消す
+                            for (id, _) in cores {
+                                state.remove_unit(&id);
+                            }
+                            state.dry_run_move_unit(current_unit_id, direction).unwrap()();
                         }
-                        state.dry_run_move_unit(current_unit_id, direction).unwrap()();
                     }
                 }
             }
@@ -107,5 +133,22 @@ mod update_test {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state.finalize());
+    }
+
+
+    #[test]
+    fn calc_similarity_test() {
+        let a: BTreeSet<_> = vec![1].into_iter().collect();
+        let b: BTreeSet<_> = vec![1].into_iter().collect();
+        assert_eq!(calc_similarity(&a, &b), (2,2));
+        let a: BTreeSet<_> = vec![1, 2, 3].into_iter().collect();
+        let b: BTreeSet<_> = vec![1, 2, 3].into_iter().collect();
+        assert_eq!(calc_similarity(&a, &b), (6,6));
+        let a: BTreeSet<_> = vec![1, 2, 3].into_iter().collect();
+        let b: BTreeSet<_> = vec![1, 2, 4].into_iter().collect();
+        assert_eq!(calc_similarity(&a, &b), (4,6));
+        let a: BTreeSet<_> = vec![1, 2, 3].into_iter().collect();
+        let b: BTreeSet<_> = vec![1, 2, 4,5].into_iter().collect();
+        assert_eq!(calc_similarity(&a, &b), (4,7));
     }
 }
