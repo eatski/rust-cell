@@ -20,7 +20,7 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let mut units_to_iter: Vec<_> = state.units.clone().into_iter().collect();
     units_to_iter.shuffle(rng);
     for (current_unit_id, _) in units_to_iter.iter() {
-        let rnd = rng.gen_range(0..2048);
+        let rnd = rng.gen_range(0..1024);
         match rnd {
             0..=24 => {
                 let direction = NEXT_PATHES.iter().choose(rng).unwrap();
