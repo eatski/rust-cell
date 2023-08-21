@@ -59,6 +59,15 @@ impl Default for Unit {
     }
 }
 
+impl Unit {
+    pub fn new(blueprint: BTreeSet<RelativePath>) -> Self {
+        Self {
+            pathes: [UNIT_CORE_PATH].into(),
+            blueprint,
+        }
+    }
+}
+
 pub type UnitId = usize;
 
 #[derive(Debug)]
@@ -117,13 +126,23 @@ impl GameState {
             Err(collision_addresses)
         }
     }
+
     /**
      * unitを新しくスポーンさせる
      */
-    pub fn spawn_unit(&mut self, address: &Address) {
-        let unit_id = self.units.keys().max().unwrap_or(&0) + 1;
-        self.cells.insert(*address, (unit_id, UNIT_CORE_PATH));
-        self.units.insert(unit_id, (*address, Unit::default()));
+    pub fn dry_run_spawn_unit<'a>(
+        &'a mut self,
+        address: &'a Address,
+    ) -> Option<impl FnOnce(Unit) + 'a> {
+        if self.cells.contains_key(address) {
+            return None;
+        }
+        let address = address.clone();
+        Some(move |unit| {
+            let unit_id = self.units.keys().max().unwrap_or(&0) + 1;
+            self.cells.insert(address, (unit_id, UNIT_CORE_PATH));
+            self.units.insert(unit_id, (address, unit));
+        })
     }
 
     /**
@@ -178,9 +197,9 @@ mod tests {
     #[test]
     fn move_unit() {
         let mut state = GameState::default();
-        state.spawn_unit(&Address { x: 0, y: 0 });
+        state.dry_run_spawn_unit(&Address { x: 0, y: 0 }).unwrap()(Unit::default());
         let unit_id = state.units.first_key_value().unwrap().0.clone();
-        state.spawn_unit(&Address { x: 2, y: 0 });
+        state.dry_run_spawn_unit(&Address { x: 2, y: 0 }).unwrap()(Unit::default());
         state
             .dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 })
             .unwrap()();
@@ -190,9 +209,9 @@ mod tests {
     #[test]
     fn move_unit_2() {
         let mut state = GameState::default();
-        state.spawn_unit(&Address { x: 0, y: 0 });
+        state.dry_run_spawn_unit(&Address { x: 0, y: 0 }).unwrap()(Unit::default());
         let unit_id = state.units.first_key_value().unwrap().0.clone();
-        state.spawn_unit(&Address { x: 2, y: 0 });
+        state.dry_run_spawn_unit(&Address { x: 2, y: 0 }).unwrap()(Unit::default());
         state
             .dry_run_move_unit(&unit_id, &RelativePath { x: -1, y: 0 })
             .unwrap()();
@@ -202,9 +221,9 @@ mod tests {
     #[test]
     fn move_unit_3() {
         let mut state = GameState::default();
-        state.spawn_unit(&Address { x: 0, y: 0 });
+        state.dry_run_spawn_unit(&Address { x: 0, y: 0 }).unwrap()(Unit::default());
         let unit_id = state.units.first_key_value().unwrap().0.clone();
-        state.spawn_unit(&Address { x: 1, y: 0 });
+        state.dry_run_spawn_unit(&Address { x: 1, y: 0 }).unwrap()(Unit::default());
         let error = state
             .dry_run_move_unit(&unit_id, &RelativePath { x: 1, y: 0 })
             .map(|_| ())

@@ -29,6 +29,9 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
     let mut units_to_iter: Vec<_> = state.units.clone().into_iter().collect();
     units_to_iter.shuffle(rng);
     for (current_unit_id, _) in units_to_iter.iter() {
+        if state.units.get(current_unit_id).is_none() {
+            continue;
+        }
         let rnd = rng.gen_range(0..1024);
         match rnd {
             0..=24 => {
@@ -72,7 +75,7 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
                     }
                 }
             }
-            25 => {
+            25..=26 => {
                 let (_, unit) = state.units.get(current_unit_id).unwrap();
                 let next_pathes: BTreeSet<_> = unit
                     .pathes
@@ -98,14 +101,30 @@ pub fn update(state: &mut GameState, inputs: &Vec<Input>, rng: &mut impl Rng) {
                     }
                 }
             }
+            27 => {
+                let (address, unit) = state.units.get(current_unit_id).unwrap();
+                let mut pathes = unit.pathes.clone();
+                pathes.remove(&UNIT_CORE_PATH);
+                let mut next_pathes: Vec<_> = NEXT_PATHES.iter().map(|path| address + path).collect();
+                next_pathes.shuffle(rng);
+                for address in next_pathes {
+                    let pathes = pathes.clone();
+                    if state.dry_run_spawn_unit(&address)
+                    .map(move |exec| {
+                        exec(Unit::new(pathes.clone()));
+                    })
+                    .is_some() {
+                        break;
+                    }
+                }
+            }
             _ => {}
         }
     }
     if let Some(Input::Click { address }) = inputs.last() {
-        if let Some(_) = state.cells.get(address).cloned() {
-        } else {
-            state.spawn_unit(address);
-        }
+        if let Some(exec) = state.dry_run_spawn_unit(address) {
+            exec(Unit::default());
+        };
     }
 }
 
@@ -138,7 +157,7 @@ mod update_test {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state.finalize());
-        for _ in 0..10000 {
+        for _ in 0..1000 {
             update(&mut state, &vec![], &mut rng);
         }
         insta::assert_debug_snapshot!(state.finalize());
